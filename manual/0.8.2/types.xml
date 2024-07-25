@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="types.xsl"?>
+
+<types>
+  <type name="u8" baseType="int" rangeMin="0" rangeMax="255"/>
+  <type name="u16" baseType="int" rangeMin="0" rangeMax="65535"/>
+  <type name="angle" baseType="int" rangeMin="-511" rangeMax="511"/>
+  <type name="percentage" baseType="int" rangeMin="0" rangeMax="100"/>
+  <type name="f32" baseType="fixed" format="20.12"/>
+  <type name="Texture" baseType="enum">
+    <values>
+	  <value>tex_enemy</value>
+	  <value>tex_bullet</value>
+	  <value>tex_item</value>
+	  <value>tex_player</value>
+	  <value>tex_player_fx</value>
+	  <value>tex_background</value>
+      <value>tex_boss</value>
+	</values>
+  </type>
+  <type name="ItemType" baseType="enum">
+    <values>
+	  <value>point</value>
+	  <value>point_large</value>
+	  <value>power</value>
+	  <value>power_large</value>
+	  <value>extra</value>
+	  <value>extra_large</value>
+	  <value>life</value>
+	  <value>bomb</value>
+	  <value>full_power</value>
+      <value>magnet_point</value>
+	</values>
+  </type>
+  <type name="AngleTarget" baseType="enum">
+    <values>
+	  <value>player</value>
+	  <value>boss</value>
+	  <value>enemy</value>
+	  <value>center</value>
+	  <value>top</value>
+	  <value>bottom</value>
+	  <value>left</value>
+	  <value>right</value>
+	</values>
+  </type>
+  <type name="CharaAnimationType" baseType="enum">
+    <values>
+	  <value>idle</value>
+	  <value>left</value>
+	  <value>right</value>
+	  <value>tween_left</value>
+	  <value>tween_right</value>
+	</values>
+  </type>
+  <type name="DrawAngleMode" baseType="enum">
+    <values>
+	  <value>auto</value>
+	  <value>manual</value>
+	  <value>rotate</value>
+	</values>
+  </type>
+  <type name="Spell" baseType="reference"/>
+  <type name="Object" baseType="reference"/>
+  <type name="BossObject" baseType="reference"/>
+  <type name="Animation" baseType="reference"/>
+  <type name="Conversation" baseType="reference"/>
+  <type name="string" baseType="string"/>
+  <type name="vararg" baseType="vararg"/>
+</types>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div class="page">
+      <div class="pageIndex">
+        <h3>Page Index</h3>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#math">Math</a></li>
+          <li><a href="#game">Game</a></li>
+          <li><a href="#sprite">Sprite</a></li>
+          <li><a href="#boss">Boss</a></li>
+          <li><a href="#player">Player</a></li>
+          <li><a href="#enums">Enumerations</a></li>
+        </ul>
+      </div>
+
+      <a name="intro" href="#intro"><h2>Introduction</h2></a>
+      <p>The LUA scripts can be used for both player scripts and stage scripts. Player scripts store their functions in a single table (referenced by the <em>code</em> field in the player's .ini file). Stage scripts work by calling a global function <em>main</em>. Execution of the <em>main</em> function is started at the beginning of the stage, but thanks to the <em>yield(frames)</em> function it's possible to suspend execution for a number of frames (at 60 frames/s). The <em>yield</em> function is specified in <em>TouhouDS/script/stdlib.lua</em>.</p>
+
+      <a name="math" href="#math"><h2>Math</h2></a>
+      <p>LUA's built-in math library is not available, replacement math methods are available (called like this: <em>Math.rand(128, 256)</em>).</p>
+      <table class="desc">
+        <tr><td><strong>rand()</strong></td><td>Returns a random number (unbounded).</td></tr>
+        <tr><td><strong>rand(max)</strong></td><td>Returns a random number in the range <em>[0, max)</em>.</td></tr>
+        <tr><td><strong>rand(min, max)</strong></td><td>Returns a random number in the range <em>[min, max)</em>.</td></tr>
+        <tr><td><strong>abs(v)</strong></td><td>Returns the absolute value.</td></tr>
+        <tr><td><strong>min(a, b)</strong></td><td>Returns the lesser of <em>a</em> and <em>b</em>.</td></tr>
+        <tr><td><strong>max(a, b)</strong></td><td>Returns the larger of <em>a</em> and <em>b</em>.</td></tr>
+        <tr><td><strong>ceil(v)</strong></td><td>Rounds <em>v</em> up to the nearest integer.</td></tr>
+        <tr><td><strong>floor(v)</strong></td><td>Rounds <em>v</em> down to the nearest integer.</td></tr>
+        <tr><td><strong>round(v)</strong></td><td>Rounds <em>v</em> to the nearest integer.</td></tr>
+        <tr><td><strong>signum(v)</strong></td><td>Returns the sign of <em>v</em> (-1, 0, 1).</td></tr>
+        <tr><td><strong>sin(a)</strong></td><td>Returns the sine of <em>a</em>. A full circle is 512.</td></tr>
+        <tr><td><strong>cos(a)</strong></td><td>Returns the cosine of <em>a</em>. A full circle is 512.</td></tr>
+        <tr><td><strong>tan(a)</strong></td><td>Returns the tangent of <em>a</em>.</td></tr>
+        <tr><td><strong>asin(a)</strong></td><td>Returns the arc-sine of <em>a</em>.</td></tr>
+        <tr><td><strong>acos(a)</strong></td><td>Returns the arc-cosine of <em>a</em>.</td></tr>
+        <tr><td><strong>atan2(dy, dx)</strong></td><td><a href="http://en.wikipedia.org/wiki/Atan2">atan2</a></td></tr>
+        <tr><td><strong>angleBetween(x0, y0, x1, y1)</strong></td><td>Returns the angle from <em>(x0, y0)</em> to <em>(x1, y1)</em>.</td></tr>
+      </table>
+
+      <a name="game" href="#game"><h2>Game</h2></a>
+      <p>The following functions are available in the Game table. Call using Game.*, not Game:*</p>
+      <table class="desc">
+        <tr><td><strong>addThread(funcname)</strong></td><td>Pass the name of a global function to run in parallel to the <em>main</em> function.</td></tr>
+        <tr><td><strong>destroyAll(spriteType)</strong></td><td>Destroys all sprites of the specified type. Only the following types are allowed: <em>SPRITE_playerShot</em>, <em>SPRITE_enemy</em>, <em>SPRITE_enemyShot</em>.</td></tr>
+        <tr><td><strong>setBGM(filename)</strong></td><td>Starts playing the specified background music (MP3 format). Paths should be relative to the game's bgm folder.</td></tr>
+        <tr><td><strong>playSFX(filename)</strong></td><td>Plays the named sound file. Searches <em>/TouhouDS/snd</em> and the stage data folder.</td></tr>
+        <tr><td><strong>setBgScrollSpeed(sx, sy)</strong></td><td>Changes the background scroll speed. The default values are <em>(0, 1)</em>.</td></tr>
+        <tr><td><strong>endStage()</strong></td><td>Ends the current stage immediately.</td></tr>
+      </table>
+      
+      <a name="sprite" href="#sprite"><h2>Sprite</h2></a>
+      <p>Almost all in-game objects are Sprites (player-controlled characters, bullets, items, enemies, bombs). Sprites have a number of built-in methods, some of these are called from outside LUA.</p>
+      
+      <h3>Externally called methods</h3>
+      <table class="desc">
+        <tr><td><strong>init()</strong></td><td>Called once, the first frame the Sprite is active.</td></tr>
+        <tr><td><strong>update()</strong></td><td>Called every frame. You can use yield in this function.</td></tr>
+        <tr><td><strong>onDestroyed()</strong></td><td>Called when the Sprite is destroyed. There are some ways a Sprite can be deleted from the game without begin 'destroyed'. There are two common cases of this:<br/>1. If a Sprite leaves the screen.<br/>2. items get collected, not destroyed.</td></tr>
+        <tr><td><strong>onCollision(spriteType, power, x, y, col1Id, col2Id)</strong></td><td>Gets executed when a Sprite gets hit by another Sprite. The <em>type, power, x, y</em> that get passed as parameters to this function are those from the other Sprite. <em>col1Id</em> and <em>col2Id</em> are the ID's of the ColNode's invloved or <em>-1</em> for special collisions.</td></tr>
+        <tr><td><strong>animator()</strong></td><td>Called every frame, use this function to update the Sprite's image. You can use yield in this function.</td></tr>
+      </table>
+      
+      <h3>Internally callable methods</h3>
+      <p>Sprites have some other methods that can be used internally by the LUA script.</p>
+      <table class="desc">
+        <tr><td><strong>setPos(x, y)</strong></td><td>Changes Sprite position</td></tr>
+        <tr><td><strong>setSpeed(spd)</strong></td><td>Changes Sprite speed</td></tr>
+        <tr><td><strong>setSpeedInc(spdi)</strong></td><td>Every frame, speed += speedInc</td></tr>
+        <tr><td><strong>setAngle(a)</strong></td><td>Changes Sprite angle. <strong>A full circle is 512</strong>.</td></tr>
+        <tr><td><strong>setAngleInc(ai)</strong></td><td>Every frame, angle += angleInc</td></tr>
+        <tr><td><strong>setPower(pwr)</strong></td><td>Power doubles as both hit points and damage dealer.<br/> Upon collision, <em>s1p' -= s2p</em> and <em>s2p' -= s1p</em>.</td></tr>
+        <tr><td><strong>setColCircle(id, r)</strong></td><td>Sets the ColNode with the specified ID to a circle with radius <em>r</em>.</td></tr>
+        <tr><td><strong>setColSegment(id, autoRotate, dx, dy, thickness)</strong></td><td>Sets the ColNode with the specified ID to a line segment from <em>(0, 0)</em> to <em>(dx, dy)</em> and thickness <em>r</em>. When <em>autoRotate == true</em>, <em>dx</em> and <em>dy</em> are changed with the <em>drawAngle</em>.</td></tr>
+        <tr><td><strong>removeColNode(id)</strong></td><td>Removes the ColNode with the specified ID.</td></tr>
+        <tr><td><strong>setDrawAngle(dam, angle)</strong></td><td>Changes rotation (mode) of the Sprite's image. <em>DAM_auto</em> automatically changes <em>drawAngle</em> to the Sprite's angle each frame (ignores the second arg), <em>DAM_manual</em> sets <em>drawAngle</em> to <em>angle</em>, <em>DAM_rotate</em> increases <em>drawAngle</em> by <em>angle</em>.</td></tr>
+        <tr><td><strong>setDrawSize(w, h)</strong></td><td>Changes the draw size of the sprite. Negative sizes produce a mirrored image.</td></tr>
+        <tr><td><strong>setVisible(v)</strong></td><td>The boolean <em>v</em> toggles visibility. Being invisible disables collisions.</td></tr>
+        <tr><td><strong>setImage(texType, x, y, w, h)</strong></td><td>Where <em>texType</em> is a value of the <em>TexType</em> enum and determines the texture to use. <em>x,y,w,h</em> specify a subrect of the texture.</td></tr>
+        <tr><td><strong>setInvincibleTime(time)</strong></td><td>An invincible Sprite can't receive damage. <em>time</em> is in frames.</td></tr>
+        <tr><td><strong>setZ(z)</strong></td><td>The <em>z</em> value determines the draw order. Sprites with higher values of <em>z</em> are drawn on top.</td></tr>
+        <tr><td><strong>setDieOutsideBounds(d)</strong></td><td>Toggles <em>dieOutsideBounds</em> on or off. When <em>true</em> the Sprite is removed once it flies out of the screen.</td></tr>
+        
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td><strong>getX()</strong></td><td>Returns the x-coordinate of the Sprite.</td></tr>
+        <tr><td><strong>getY()</strong></td><td>Returns the y-coordinate of the Sprite.</td></tr>
+        <tr><td><strong>getSpeed()</strong></td><td>Returns speed.</td></tr>
+        <tr><td><strong>getSpeedInc()</strong></td><td>Returns speedInc.</td></tr>
+        <tr><td><strong>getAngle()</strong></td><td>Returns angle.</td></tr>
+        <tr><td><strong>getAngleInc()</strong></td><td>Returns angleInc.</td></tr>
+        <tr><td><strong>getPower()</strong></td><td>Returns power.</td></tr>
+        <tr><td><strong>getDrawAngle()</strong></td><td>Returns the drawAngle (see <em>setDrawAngle()</em>).</td></tr>
+        <tr><td><strong>getDrawAngleMode()</strong></td><td>Returns the current drawAngleMode (<em>DAM_auto</em> or <em>DAM_manual</em>).</td></tr>        
+        <tr><td><strong>getDrawWidth()</strong></td><td>Returns the current draw width (set using <em>setDrawSize()</em> or <em>setImage()</em>).</td></tr>
+        <tr><td><strong>getDrawHeight()</strong></td><td>Returns the current draw height (set using <em>setDrawSize()</em> or <em>setImage()</em>).</td></tr>
+        <tr><td><strong>isVisible()</strong></td><td><em>true</em> if visible.</td></tr>
+        <tr><td><strong>isDestroyed()</strong></td><td><em>true</em> if destroyed or otherwise removed from the game.</td></tr>
+        <tr><td><strong>getInvincibleTime()</strong></td><td>Returns invincibleTime (in frames).</td></tr>
+        <tr><td><strong>getZ()</strong></td><td>Returns z.</td></tr>
+        <tr><td><strong>getDieOutsideBounds()</strong></td><td>Returns value of <em>dieOutsideBounds</em>.</td></tr>
+        
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td><strong>advance(dist)</strong></td><td>Moves forward by <em>dist</em></td></tr>
+        <tr><td><strong>advanceSide(dist)</strong></td><td>Moves sideways by <em>dist</em></td></tr>
+        <tr><td><strong>die()</strong></td><td>Destroys the Sprite</td></tr>
+        <tr><td><strong>drop(itemType, amount)</strong></td><td>Where <em>itemType</em> is a value of the <em>ItemType</em> enum. Drops <em>amount</em> number of items of type <em>itemType</em></td></tr>
+      </table>
+
+      <a name="boss" href="#boss"><h2>Boss</h2></a>
+      <p>A subclass of sprite.</p>
+      <table class="desc">
+        <tr><td><strong>setName(name)</strong></td><td>Changes the Boss' displayed name.</td></tr>
+        <tr><td><strong>addSpellcard(funcname, pow, time, name)</strong></td><td>Adds a spellcard to the boss' list of spellcards. <em>funcname</em> is the name of the method to call when the spellcard starts. <em>pow</em> and <em>name</em> change start power and spellcard time (in frames). <em>name</em> will be displayed as the spellcard name.</td></tr>
+        <tr><td><strong>onSpellEnd()</strong></td><td>This method gets called when a spellcard ends. Override its implementation to do something special on spell endings.</td></tr>
+      </table>
+      
+      <a name="player" href="#player"><h2>Player</h2></a>
+      <p>A subclass of sprite.</p>
+      <table class="desc">
+        <tr><td><strong>isFocus()</strong></td><td>Returns <em>true</em> when the player is holding the focus key.</td></tr>
+        <tr><td><strong>getAttackLevel()</strong></td><td>Returns an int (0-4) signifying the power level.</td></tr>
+        <tr><td><strong>getAttackPower1()</strong></td><td>Returns the suggested power for primary shots.</td></tr>
+        <tr><td><strong>getAttackPower2()</strong></td><td>Returns the suggested power for secondary shots.</td></tr>
+        <tr><td><strong>isButtonPressed(button)</strong></td><td><em>button</em> should be a value of the <em>Keys</em> enum. Returns <em>true</em> if that button is pressed.</td></tr>
+        <tr><td><strong>setBombCooldown(t)</strong></td><td>Changes the bomb cooldown (while <em>bombCooldown > 0</em> no other bombs can be used).</td></tr>
+        <tr><td><strong>bomb()</strong></td><td>Override this method to change how the player's bombs work.</td></tr>
+      </table>
+        
+      <a name="enums" href="#enums"><h2>Enumerations</h2></a>
+      <p>There exist several types of <a href="http://en.wikipedia.org/wiki/Enumeration">enumerations</a> in the program. LUA has no native support for enumerations, so the enums here are actually implemented as (tables containing) number constants. For example the expression <em>SpriteType.SPRITE_enemy</em> evaluates to the number "5" in LUA. The fields are also available as globals (<em>SPRITE_enemy</em> is a global with value <em>5</em>).</p>
+      
+      <h3>C language definitions of enums</h3>
+      <pre class="code">enum AngleTarget {
+    AT_none,
+    AT_player,
+    AT_boss,
+    AT_enemy,
+    AT_center,
+    AT_top,
+    AT_bottom,
+    AT_left,
+    AT_right
+};
+
+enum ItemType {
+    IT_null,
+    IT_point,
+    IT_pointLarge,
+    IT_power,
+    IT_powerLarge,
+    IT_extra,
+    IT_extraLarge,
+    IT_life,
+    IT_bomb,
+    IT_fullPower,
+    IT_magnetPoint
+};
+
+enum CharaAnimationType {
+    CAT_idle,
+    CAT_left,
+    CAT_right,
+    CAT_tweenLeft,
+    CAT_tweenRight
+};
+
+enum DrawAngleMode {
+    DAM_auto,
+    DAM_manual,
+    DAM_rotate
+};
+
+enum TextureType {
+    TEX_enemy = 0,
+    TEX_bullet = 1,
+    TEX_bullet2 = 2,
+    TEX_item = 3,
+    TEX_player = 4,
+    TEX_playerFx = 5,
+    TEX_explosion = 6,
+    TEX_background = 7,
+    TEX_boss = 8,
+    NUM_TEXTURE_TYPES = 9
+};
+
+enum SpriteType {
+    SPRITE_default = 0,
+    SPRITE_remote = 1,
+    SPRITE_player = 2,
+    SPRITE_playerShot = 3,
+    SPRITE_item = 4,
+    SPRITE_enemy = 5,
+    SPRITE_enemyShot = 6,
+    NUM_SPRITE_TYPES = 7
+};
+
+enum Keys {
+    VK_left = 1,
+    VK_right = 2,
+    VK_up = 4,
+    VK_down = 8,
+    VK_fire = 16,
+    VK_focus = 32,
+    VK_bomb = 64
+};</pre>
+      
+    </div>
+  </body>
+</html>

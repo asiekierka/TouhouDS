@@ -1,0 +1,9 @@
+
+//void fire(bool focus, int level, fixed pow1, fixed pow2);
+
+bool  isFocus();
+int   getAttackLevel();
+fixed getAttackPower1();
+fixed getAttackPower2();
+bool  isButtonPressed(int button);
+void  setBombCooldown(int frames);

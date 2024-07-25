@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual - Character Tutorial</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div style="background-color: #CCCCCC; padding: 5px;">
+      <a href="commands.xml">Command Reference</a> - 
+      <a href="types.xml">Command Data Types</a>
+    </div>
+    <div>
+      <div>
+        <h3>Creating a new character</h3>
+        <p>Adding characters is relatively simple; a new character can be added without any major scripting. The only scripting involved is in creating the fire/focus_fire patterns. And you can copy other characters' shot patterns and simply replace the graphics. Editing the scripts is also easy, but I won't talk about it much in this tutorial (more about scripting <a href="scripting_tutorial.html">here</a>).</p>
+        <p>First, lets look at the files that make up a character. Characters are stored in (/TouhouDS/chara), the files corresponding to "marisa" are:
+          <ul>
+            <li>marisa.ini</li>
+            <li>marisa/tex_marisa.dta</li>
+            <li>marisa/tex_marisa.pal</li>
+            <li>marisa/portrait.png</li>
+            <li>marisa/player_fire.pds</li>
+          </ul>
+        The game looks for .ini files in /TouhouDS/chara, these files contain the character's stats and personal info (name, description, etc). Characters also need to store their graphics (and any other stuff) somewhere. All other files the character needs are stored in a subfolder with the same ID as the character (a character's ID is equal to their filename without the extension "marisa.ini"-&gt;"marisa", "reimu.ini"=&gt;"reimu", etc).</p>
+        <p>Now, for the files stored in the "marisa" subfolder:<br/>
+        First, there are two files: tex_marisa.dta and tex_marisa.pal. These are the images used in-game. They need to be converted to a special format before they can be used on the DS' hardware. You can use "texmex" (found in the tools folder, if you don't have a tools folder you need to download the development release of TouhouDS which contains all sources and tools).</p>
+        <p>Then there's portrait.png, this is the image used on the character select screen. The image has a PNG and it has to be 256x192 pixels.</p>
+        <p><b>Warning: The following paragraph won't make sense to you if you aren't familiar with the scripting language.</b><br/>Finally there's payer_fire.pds, this file is a script that creates the pattern fired by the player. It should contain the following spells: fire0, fire1, fire2, fire3, fire_focus0, fire_focus1, fire_focus2, fire_focus3. The number at the end of the name corresponds to the "power level" of the player. If the player only has a low number of power items, fire0 is called. If the player has more shot power, fire1 is used instead. Then fire2, and finally fire3. When holding the focus button, fire_focus0, fire_focus1, etc. are used. Two parameters are passed to the spells. As $1, primary shot power, and as $2, secondary shot power. Most patterns have stronger projectiles going straight up, with weaker projectiles spreading out to the sides, use "power $1" for the stronger projectiles and "power $2" for the weaker ones.</p>
+
+        <h3>Editing the .ini files</h3>
+        <p>The easiest way to explain these is to just show an example:<br/>
+          <pre style="background-color: #EEEEEE; padding: 10px">#personal info
+script_version=1.0
+name=Marisa
+portrait=portrait.png
+desc=Golden eyes, blond hair, a braid on only one side of her face, carries a bamboo and straw broom.
+
+#stats
+shot_power_mul=1.0
+speed=3.0
+speed_focus=1.0
+bombs=2
+graze_range=8
+hitbox=2
+
+#other
+texture=tex_marisa:A3I5
+bomb=default
+bomb_focus=master_spark</pre>
+        As you can see, editing stats is trivial. Lines starting with the #-character are comments, and the other lines are simple name/value combinations.</p>
+        <p>name and desc change the name and description that are shown on the character select screen. portrait is the name of the image used on that same screen.<br/>shot_power_mul is a global power modifier. The character's shot_power is multiplied by this value, so for example changing this from 1.0 to 2.0 makes all shots fired by the character twice as strong.<br/>
+        speed and speed_focus change the character's movement speed, and bombs changes the number of bombs you start with.<br/>graze_range changes the radius of the square (meaning the graze square is [dx=-r, dy=-r, w=2r, h=2r] relative to your position) used to check for grazing collisions, while hitbox changes the radius of the circle used for hit detection.<br/>bomb and bomb_focus specify which bombs to activate when bombing unfocused and focused. Bombs have to be built-in, you can't script them. Use default for a generic looking bomb.</p>
+        <p>The value of texture should be in the form "name:format". The texture files should be called &lt;name&gt;.dta and &lt;name&gt;.pal, and should be converted to the format specified. Read <a href="convert_images.html">this</a> for more info. The texture should be 128x128 pixels, and the images should be stores at fixed positions (use <a href="tex_chara_template.png">this template</a> dots mark the hitbox center). The first row contains the 4-image idle animation, the second row a 4-frame animation used when going from idle to the moving sideways. The third row contains the 4-frame moving sideways animation. All sideways animations should be for moving left: when moving right, the images are simply flipped. The space [x=0, y=96, w=128, h=32] can be used as you wish, it's usually used to store the player's shot graphics.</p>
+      </div>
+    </div>
+  </body>
+</html>

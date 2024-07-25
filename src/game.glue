@@ -1,0 +1,7 @@
+
+void addThread(string func); //Name of global function
+void destroyAll(int spriteType);
+void setBGM(string filename);
+void playSFX(string filename);
+void setBgScrollSpeed(fixed sx, fixed sy);
+void endStage();

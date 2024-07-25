@@ -1,0 +1,3 @@
+
+void setName(string name);
+//addSpellcard(string name, fixed life, int time, function func)

@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual - Scripting Tutorial</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div style="background-color: #CCCCCC; padding: 5px;">
+      <a href="commands.xml">Command Reference</a> - 
+      <a href="types.xml">Command Data Types</a>
+    </div>
+    <div>
+      <h3>Scripting</h3>
+      <p>The game's built-in scripting language makes it possible to create firing patterns for characters as well as program entire stages. The language has a surprising number of similarities with <a href="http://en.wikipedia.org/wiki/Logo_(programming_language)">Logo</a>. If you've never programmed before, or if you find it difficult to adapt to the language, it might be a good idea to learn a bit of Logo.</p>
+
+      <h4>Getting Started</h4>
+      <p>When you start the program, almost immediately you're required to select a game. A game consists of one or more routes and a route of one or more stages. If you just want to create a single stage, you'll first have to create a game and add a route to that game. An easy way to start is by using <a href="game_template.zip">this template</a>. The template already contains a game ("game_template"), a route ("normal") and a first stage.</p>
+      <p>The first hing you'll want to change is the game's ID. Right now it's <em>game_template</em> -- the name of the .ini file without the file extension (game_template.ini -> game_template). Since the ID is determined by a filename, renaming game_template.ini to example.ini will change the game ID to <em>example</em>. Make sure to also rename the game_template subfolder to the new ID. The game_template.ini file contains some information about the game:
+        <pre style="background-color: #DDDDDD; padding: 10px;">script_version=1.0
+script_version=1.0
+version=1.0.0
+name=(game name)
+desc=(game desc)
+banner=banner.png</pre>
+      The version number in a.b.c format, numbers only (1.12.63 is valid, 1.3.6c isn't). Second, the game's name and description as they'll appear on the game selection screen. Lastly, a <em>banner</em> property that points to the banner image that's also shown on the selection screen. The image should be a 256x192 pixel PNG.</p>
+      <p>Looking inside the game's folder you'll find a file named "normal.ini". There's a .ini file in this folder for each <em>route</em> in the game. A route is just a named collection of stages. If you want to have multiple difficulty settings, you should make a route for each difficulty. But let's look at <em>normal.ini</em> first:
+        <pre style="background-color: #DDDDDD; padding: 10px;">name=Normal
+locked=false</pre>
+      The name property should speak for itself, but you also see a locked property. Settings locked to <em>false</em> doesn't really do anything -- <em>false</em> is the default value -- but when locked is set to <em>true</em>, the route is hidden from the player. Since you can lock a stage, it's only natural that you can also unlock it. Unlocking is done by adding a <em>unlocks</em> property to the .ini of a specific stage. When the player clears that stage, the route with ID equal to the stage's <em>unlocks</em> property is then unlocked.</p>
+      <p>The route folder contains <em>stages</em>, once again each with its own .ini and subfolder. stage1.ini looks like this:
+        <pre style="background-color: #DDDDDD; padding: 10px;">name=(stage name)
+desc=(stage description)</pre>
+      The stage name and description are shown at the beginning of the stage. Aside from the previously discussed <em>unlocks</em> property, there are also these properties:
+        <pre>tex_player_fx
+tex_bullet
+tex_item
+tex_enemy
+tex_explosion
+tex_boss
+tex_background</pre>
+      They can be used to override the default textures for that specific stage, allowing you to use your own images for enemies, projectiles, etc. An example usage is:
+        <pre style="background-color: #DDDDDD; padding: 10px;">tex_boss=tex_boss_cirno:A3I5</pre>
+      Where <em>tex_boss_cirno</em> is the filename and <em>A3I5</em> is the filetype. You have to <a href="convert_images.html">convert your images</a> to a specific format before you can use them.</p>
+
+      <h4>The scripting language</h4>
+      <p>The stage folder contains a file called <em>main.pds</em>. That's the main script file, let's take a look inside:
+        <pre style="background-color: #DDDDDD; padding: 10px;">define spell main
+wait 180
+end_stage</pre>
+      This is pretty much the simplest stage you can make. It just waits a while and then ends. The first line
+        <pre style="background-color: #DDDDDD; padding: 10px;">define spell main</pre>
+      defines a <em>spell</em> called <em>main</em>. Every stage should have a main spell, that's the spell which is executed as the stage starts. All other spells can then be called from the main spell. Not every define has to be a spell, besides <em>spell</em> you can also use <em>object</em> to define enemies/projectiles and <em>boss</em> to define bosses. More on those later.</p>
+      <p>A define looks like this:
+        <pre style="background-color: #DDDDDD; padding: 10px;">define %TYPE %NAME
+%COMMAND
+%COMMAND
+...
+%COMMAND
+(empty line)</pre>
+        Where %TYPE is one of (spell, object, boss) and name is a single word starting with a letter of underscore, followed by any number of letters, underscores and numbers ([A-Za-z_]([A-Za-z_0-9])*). The line starting with define is followed by any number of commands, each one on a seperate line. An empty line indicates the end of the definition.</p>
+        <p>A command is written like this
+          <pre style="background-color: #DDDDDD; padding: 10px;">%COMMAND_NAME %VAR %VAR %VAR</pre>
+        for a command with thre parameters. So basically, the command name, followed by the parameters seperated by spaces. A more concrete example would be:
+          <pre style="background-color: #DDDDDD; padding: 10px;">image tex_enemy 96 0 32 32</pre>
+        This executes the "image" command with parameters (tex_enemy, 96, 0, 32, 32). If we look at the image command in the <a href="commands.xml#image">command reference</a>, we see:
+          <pre style="background-color: #DDDDDD; padding: 10px;">image texture:Texture x:u8 y:u8 w:u8 h:u8</pre>
+        So the first parameter, tex_enemy, is a reference to the texture we want to use. And x, y, w, h define the part of that texture we're going to use.</p>
+        <p>Of course, we also want to be able to define objects (enemies ans projectiles are objects). An object define is slightly different:
+          <pre style="background-color: #DDDDDD; padding: 10px;">define object fairy
+:init:
+%COMMAND
+%COMMAND
+...
+%COMMAND
+:life:
+%COMMAND
+%COMMAND
+...
+%COMMAND
+:death:
+%COMMAND
+%COMMAND
+...
+%COMMAND
+</pre>
+      Objects have their commands split in three parts: init, life and death. The commands under :init: are immediately executed when the object is created and the commands after :death: are exectuted when the object is destroyed. Commands under :life: are executed while the object is alive. Don't put any long running commands or waits in :init: or :death: they block the program untile they're done.</p>
+      <p>Boss defines work the same as object defines, except they can use boss-specific commands like boss_name, boss_num_spellcards and boss_spell. The way they're created is also different. Enemies are created using <em>create</em>, projectiles using <em>fire</em> and bosses using <em>create_boss</em></p>
+      <p>You should now know enough to be able to start scripting. If you're unsure how to use a certain command or how to create a certain effect, try to find another script and look at the code.</p>
+
+      <h5>Variables</h5>
+      <p>When using <a href="commands.xml#call">call</a>, <a href="commands.xml#create">create</a>, <a href="commands.xml#create_boss">create_boss</a> or <a href="commands.xml#fire">fire</a>, you can pass values to the spell/object. The values are then available in that spell/object as $1, $2, $3, etc. If you wanted to create the "fairy" object as declared above, you'd use: "create fairy -32" (or something else than "-32", whatever). Then in "turn $1", $1 is replaced by -32.</p>
+
+      <h5>Advanced</h5>
+      <p>You can also use randomized values, to generate a random value between 0.0 and 100.0, you would use: "~0.0:100.0". You can also specify the step size, for example: "~32:128;32" returns a value of 32, 64, 96 or 128.</p>
+      <p>When scripting stages, you can use multiple script files. All files with a .pds extension in the stage folder are parsed as scripts. You can use defines from other files by prepending the filename without extension to the spell name. So if you define a boss <em>chen</em> in boss.pds you can call it from boss.pds as <em>chen</em> and from main.pds as <em>boss.chen</em></p>
+      <p>There's a way to loop spellcards indefinitely, just use _loop as the final spell of a spellcard. You can also use _loop at the end of the "sub-spellcards" of objects. And you can specify the number of iterations by adding a loop count; "_loop 5" repeats the spellcard's spells five times.</p>
+      <p>A limited version of a for loop also exists. Example:
+          <pre style="background-color: #DDDDDD; padding: 10px;">_for 0.0 10.0 0.1
+call subroutine $$</pre>
+        The _for command executes the next command in the spellcard a number of times, replacing $$ with a different value each time. The params of for are startValue, endValue and step which loosely corrsesponds to "$$ = 0; do { exec_spell(); $$ += step; } while ($$ != end);".
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+body {
+    font-size: 10pt;
+    font-family: tahoma, arial, sans-serif;
+    text-align: left;
+}
+a h1, a h2, a h3 {
+    color: black;
+    text-decoration: none;
+}
+th, td {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+th {
+    height: 23px;
+    text-align: center;
+}
+hr {
+    border-style: solid;
+    border-color: #999999;
+}
+em {
+    font-family: "courier new", "courier", "monospace";
+    font-style: normal;
+}
+
+.page {
+    width: 650px;
+}
+
+.pageIndex {
+    padding: 10px;
+    margin: 0px;
+    margin-bottom: 50px;
+    background-color: #EEEEEE;
+    border: #999999 1px solid;
+}
+.pageIndex li {
+    margin-left: 10px;
+}
+.pageIndex a {
+    text-decoration: none;
+}
+
+.fig {
+    display: block;
+    float: right;
+    text-align: center;
+}
+
+.fig img {
+    border: #999999 1px solid;
+}
+
+pre.code {
+    background-color: #EEEEEE;
+    border: #999999 1px solid;
+    padding: 10px;
+    overflow: scroll;
+}
+
+table.desc * {
+    vertical-align: top;
+}

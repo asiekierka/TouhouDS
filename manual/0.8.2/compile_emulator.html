@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual - Testing in an emulator</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div style="background-color: #CCCCCC; padding: 5px;">
+      <a href="commands.xml">Command Reference</a> - 
+      <a href="types.xml">Command Data Types</a>
+    </div>
+    <div>
+      <ol>
+        <li>Download the TouhouDS source code</li>
+        <li>Download and install <a href="http://sourceforge.net/projects/devkitpro/">devkitpro/libnds</a></li>
+        <li>Open TouhouDS/src/arm9/Makefile. Comment out the options under hardware and uncomment the options under no$gba so the result looks something like this:
+        <pre style="background-color: #DDDDDD; padding: 10px;">#no$gba mode
+CFLAGS	+= -DDEBUG -DUSE_EFS
+#iDeaS
+#CFLAGS	+= -DDEBUG -DENABLE_WIFI -DIDEAS_WORKAROUND
+#Hardware
+#CFLAGS	+= -DENABLE_WIFI</pre>
+        </li>
+        <li>Open a command/terminal window and go to the TouhouDS folder</li>
+        <li>Do a "make clean" followed by a "make"
+          <ul>
+            <li>If you get an error about make not being a valid command, your devkitpro installation failed</li>
+            <li>If you get an error about no targets being found, you're executing the commands in the wrong folder.</li>
+          </ul>
+        </li>
+      </ol>
+      <p>You can now place whatever files you want in the TouhouDS/TouhouDS folder. Every time you execute "make", a file called "TouhouDS-EFS.nds" gets created, containing the files in that folder. The EFS version of the game runs in emulators (although saving data is impossible).</p>
+      <p><em>Note: There's also a batch file "run.bat" that calls make and launches the game in no$gba automatically.</em></p>
+    </div>
+  </body>
+</html>

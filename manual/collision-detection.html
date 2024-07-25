@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div class="page">
+
+      <p>The key to fast collision detection is doing as small a number of collision tests as possible. In Touhou DS, objects are assigned a collision group (see <em>SpriteType</em> enum). Each group can only collide with objects in specific other groups. This allows us to ignore a very large number of potential collisions. If we store objects by group, we don't even have to iterate over the full list of objects. Another obvious performance enhancement is realizing that <em>colliding(A, B) == colliding(B, A)</em> which saves us half the work.</p>
+      
+      <p>Grouping objects by type alone isn't enough as most of the objects will belong to the <em>SPRITE_enemyShot</em> group. But it's possible to further trim down the set of collision candidates by using some kind of spacial subdivision (group by position).</p>
+      
+      <p>Touhou DS uses a uniform grid of (<em>16px x 16px</em>) cells. The full grid is slightly larger than the visible area of the screen (4 cells padding on each side). If we put the objects in cells based on their midpoints, and disregard objects with <em>hitradius > 8px</em>, then we only need to check cells between <em>(x-1, y-1)</em> and <em>(x+1, y+1)</em>. Objects with a larger hitradius are rare and stored in a simple list.</p>
+      
+    </div>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+enum AngleTarget {
+    AT_none,
+    AT_player,
+    AT_boss,
+    AT_enemy,
+    AT_center,
+    AT_top,
+    AT_bottom,
+    AT_left,
+    AT_right
+};
+
+enum ItemType {
+    IT_null,
+    IT_point,
+    IT_pointLarge,
+    IT_power,
+    IT_powerLarge,
+    IT_extra,
+    IT_extraLarge,
+    IT_life,
+    IT_bomb,
+    IT_fullPower,
+    IT_magnetPoint
+};
+
+enum CharaAnimationType {
+    CAT_idle,
+    CAT_left,
+    CAT_right,
+    CAT_tweenLeft,
+    CAT_tweenRight
+};
+
+enum DrawAngleMode {
+    DAM_auto,
+    DAM_manual,
+    DAM_rotate
+};
+
+enum TextureType {
+    TEX_enemy = 0,
+    TEX_bullet = 1,
+    TEX_bullet2 = 2,
+    TEX_item = 3,
+    TEX_player = 4,
+    TEX_playerFx = 5,
+    TEX_explosion = 6,
+    TEX_background = 7,
+    TEX_boss = 8,
+    NUM_TEXTURE_TYPES = 9
+};
+
+enum SpriteType {
+    SPRITE_default = 0,
+    SPRITE_remote = 1,
+    SPRITE_player = 2,
+    SPRITE_playerShot = 3,
+    SPRITE_item = 4,
+    SPRITE_enemy = 5,
+    SPRITE_enemyShot = 6,
+    NUM_SPRITE_TYPES = 7
+};
+
+enum Keys {
+	VK_left = 1,
+	VK_right = 2,
+	VK_up = 4,
+	VK_down = 8,
+	VK_fire = 16,
+	VK_focus = 32,
+	VK_bomb = 64
+};

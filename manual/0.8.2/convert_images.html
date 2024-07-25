@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual - Scripting Tutorial</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div style="background-color: #CCCCCC; padding: 5px;">
+      <a href="commands.xml">Command Reference</a> - 
+      <a href="types.xml">Command Data Types</a>
+    </div>
+    <div>
+      <p>Textures are stored in a DS-specific texture format. No problem, because a converter is included in the tools folder (if you don't have a tools folder, you need to download the "+ Source" release). Open up a command prompt 
+      and browse to "tools/texmex-0.04". Then run "texmex format filename" to convert the file. Replace format by -1 to convert to A3I5 format, -6 for A5I3 and -4 for RGB256.
+        <pre style="background-color: #DDDDDD; padding: 10px;">A3I5        3-bit alpha, 32 colors
+A3I5        5-bit alpha, 8 colors
+RGB256      no alpha, 256 colors</pre>
+      </p>
+      <h5>Typical Usage</h5>
+      <p>We want to use chen.png as our boss texture. So first we convert to the format we want (A3I5 in this case):
+        <pre style="background-color: #DDDDDD; padding: 10px;">texmex -1 "c:/temp/chen.png"</pre>
+      That generates two files: <em>chen.dta</em> and <em>chen.pal</em>. We copy those to "games/game_template/normal/stage1", and open "games/game_template/normal/stage1.ini". Then we add the line:
+        <pre style="background-color: #DDDDDD; padding: 10px;">tex_boss=chen:A3I5</pre>
+      to override the default boss texture with our new image.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="commands.xsl"?>
+
+<commands>
+  <command name="image">
+    <desc>
+      Sets the object's image, uses a rectangle [x, y, w, h] from the specified texture. Only static images are supported right now.
+    </desc>
+    <params>
+	  <param name="texture" type="Texture"/>
+	  <param name="x" type="u8"/>
+	  <param name="y" type="u8"/>
+	  <param name="w" type="u8"/>
+	  <param name="h" type="u8"/>
+	</params>
+  </command>
+  <command name="hitbox">
+    <desc>
+      Sets the object's hit radius. Collision detection uses circles around object center, this command changes that circle's radius.
+    </desc>
+    <params>
+	  <param name="radius" type="u8"/>
+	</params>
+  </command>
+  <command name="power">
+    <desc>
+      Changes the object's power to the specified value. When two objects collide, their powers are substracted from each other. An object with power &lt;= 0 is immediately destroyed. So power represents hitpoints as well as damage.<br/>
+      Note: Projectiles created with "fire" are always destroyed in a collision.
+    </desc>
+    <params>
+	  <param name="power" type="f32"/>
+	</params>
+  </command>
+  <command name="pos">
+    <desc>
+      Changes the object's position to (x, y). The standard level bounds are 256.0x356.0
+    </desc>
+    <params>
+	  <param name="x" type="f32"/>
+	  <param name="y" type="f32"/>
+	</params>
+  </command>
+  <command name="move">
+    <desc>
+      Moves the object by (dx, dy), its new position will then be (x+dx, y+dy). This movement is immediate, to move towards a point over the course of several frames use "move_to" instead.
+    </desc>
+    <params>
+	  <param name="dx" type="f32"/>
+	  <param name="dy" type="f32"/>
+	</params>
+  </command>
+  <command name="move_to">
+    <desc>
+      Moves the object towards the point (x, y) with a speed of (speed). Sets speed and speed_inc to 0.
+    </desc>
+    <params>
+	  <param name="x" type="f32"/>
+	  <param name="y" type="f32"/>
+	  <param name="speed" type="f32"/>
+	</params>
+  </command>
+  <command name="speed">
+    <desc>
+      Sets the object's speed. Every frame, the object advances (speed) distance.
+    </desc>
+    <params>
+	  <param name="speed" type="f32"/>
+	</params>
+  </command>
+  <command name="speed_to">
+    <desc>
+      Changes speed to the desired value over the course of several frames. The speed changes with (accel) per frame. (accel) should always be positive regardless of whether the objects needs to speed up, slow down or even reverse its speed.
+    </desc>
+    <params>
+	  <param name="target_speed" type="f32"/>
+	  <param name="accel" type="f32"/>
+	</params>
+  </command>
+  <command name="speed_inc">
+    <desc>
+      Changes the object's accelleration. It's speed is updates to (speed+accel) every frame.
+    </desc>
+    <params>
+	  <param name="accel" type="f32"/>
+	</params>
+  </command>
+  <command name="angle">
+    <desc>
+      Change the object's angle to the specified value. The angle should range between 0 and 511, due to the implementation of the game's SIN/COS functions. Use angle 0 for up, 128 for right, 256 for down, 384 for left. Intermediate values obviously specify angles in between.
+    </desc>
+    <params>
+	  <param name="angle" type="angle"/>
+	</params>
+  </command>
+  <command name="angle">
+    <desc>
+      Changes the angle towards an object or named position instead of a value. Follow the AngleTarget link for a list possible values.
+    </desc>
+    <params>
+	  <param name="angle" type="AngleTarget"/>
+	</params>
+  </command>
+  <command name="angle_inc">
+    <desc>
+      Every frame, an object's angle is changed to (angle+angle_inc).
+    </desc>
+    <params>
+	  <param name="accel" type="angle"/>
+	</params>
+  </command>
+  <command name="turn">
+    <desc>
+      Increases an objects angle by (angle).
+    </desc>
+    <params>
+	  <param name="angle" type="angle"/>
+	</params>
+  </command>
+  <command name="turn_to">
+    <desc>
+      Keep turning an object for several frames until its angle matches (target_angle).
+    </desc>
+    <params>
+	  <param name="target_angle" type="angle"/>
+	  <param name="turn_speed" type="angle"/>
+	</params>
+  </command>
+  <command name="turn_to">
+    <desc>
+      Keep turning an object for several frames until it's directed at (target). Follow the AngleTarget link for a list possible values.
+    </desc>
+    <params>
+	  <param name="target" type="AngleTarget"/>
+	  <param name="turn_speed" type="angle"/>
+	</params>
+  </command>
+  <command name="show">
+    <desc>
+      Shows a previously hidden object. Also see "hide".
+    </desc>
+    <params>
+	</params>
+  </command>
+  <command name="hide">
+    <desc>
+      Hides an object. A hidden object doesn't collide with other objects, but it can still move/turn/fire/etc.
+    </desc>
+    <params>
+	</params>
+  </command>
+  <command name="advance">
+    <desc>
+      Moves the object forward by (distance), the direction it moves in depends on its angle.
+    </desc>
+    <params>
+	  <param name="distance" type="f32"/>
+	</params>
+  </command>
+  <command name="advance_side">
+    <desc>
+      Moves the object sideways by (distance), the direction it moves in depends on its angle.
+    </desc>
+    <params>
+	  <param name="distance" type="f32"/>
+	</params>
+  </command>
+  <command name="die">
+    <desc>
+      Kills the object, removing it from the game.
+    </desc>
+    <params>
+	</params>
+  </command>
+  <command name="drop">
+    <desc>
+      Drops up to (amount) items of type (type), each object having a chance of (change)% of appearing. You may omit chance, or both chance and amount. If you omit chance the object is dropped with 100% possibility. If you also omit amount, amount is considered to be 1. Follow the ItemType link for a list possible values.
+    </desc>
+    <params>
+	  <param name="type" type="ItemType"/>
+	  <param name="amount" type="u8"/>
+	  <param name="chance" type="percentage"/>
+	</params>
+  </command>
+  <command name="wait">
+    <desc>
+      Don't execute any more commands for the next (frames) number of frames. The game runs at 60 frames per second, so to wait three seconds use "wait 180".
+    </desc>
+    <params>
+	  <param name="frames" type="u16"/>
+	</params>
+  </command>
+  <command name="fire">
+    <desc>
+      Creates an projectile from the specified object template. Projectiles fired by enemies can only collide with the player, and player-created projectiles only collide with enemies, not their projectiles. To create an object see "create". Any parameters after the first are passed to the created object.
+    </desc>
+    <params>
+	  <param name="object" type="Object"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="create">
+    <desc>
+      Creates an enemy object from the specified object template. The created object is spawned at the position of its creator, or at (LEVEL_WIDTH/2, 0) if it's not spawned from another object. To create a projectile see "fire". Any parameters after the first are passed to the created object.
+    </desc>
+    <params>
+	  <param name="object" type="Object"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="create_boss">
+    <desc>
+      NOT IMPLEMENTED YET. In the future, this command'll create a boss/midboss. Any parameters after the first are passed to the created object.
+    </desc>
+    <params>
+	  <param name="object" type="Boss"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="call">
+    <desc>
+      Calls a subroutine (spell) with certain parameters.
+    </desc>
+    <params>
+	  <param name="object" type="Spell"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="fork">
+    <desc>
+      Asynchronously starts another spell. A level has a single spell (main) running at the beginning of the stage. Use this command to add multiple threads of execution.
+    </desc>
+    <params>
+	  <param name="object" type="Spell"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="boss_name">
+    <desc>
+      Sets the name of a boss object.
+    </desc>
+    <params>
+	  <param name="name" type="string"/>
+	</params>
+  </command>
+  <command name="boss_num_spellcards">
+    <desc>
+      Sets the spellcard counter of a boss object as displayed in the upper-left corner of the screen. You need to set the number of spellcards manually, the program doesn't detect it on its own.
+    </desc>
+    <params>
+	  <param name="spells" type="u8"/>
+	</params>
+  </command>
+  <command name="boss_spell">
+    <desc>
+      Starts the spell referenced by "object". Also sets the boss' hp, the amount of time the spellcard will last and the spellcard's name. NOTE: Boss objects are invulnerable unless they're casting a spell through this command.
+    </desc>
+    <params>
+	  <param name="name" type="string"/>
+	  <param name="life" type="f32"/>
+	  <param name="time" type="u16"/>
+	  <param name="object" type="Spell"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="end_stage">
+    <desc>
+      Wait approximately 5 seconds and then ends the stage, showing the results screen.
+    </desc>
+    <params/>
+  </command>
+  <command name="bgm">
+    <desc>
+      Changes the background music. Searches the game's bgm folder for the file first: (TouhouDS/games/game_name/bgm). If the file isn't found there, the program-wide bgm folder is used (TouhouDS/bgm).
+    </desc>
+    <params>
+	  <param name="filename" type="string"/>
+    </params>
+  </command>
+
+<!-- New in 0.8 -->
+
+  <command name="anim">
+    <desc>
+      Sets the animation for this object to the referenced animation, passing the params specified. Doesn't work on bosses or player characters -- use chara_anim instead.
+    </desc>
+    <params>
+	  <param name="animation" type="Animation"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="chara_anim">
+    <desc>
+      Similar to anim, but works on player characters. The first argument specifies which animation you want to set.
+    </desc>
+    <params>
+	  <param name="animationType" type="CharaAnimationType"/>
+	  <param name="animation" type="Animation"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="conv">
+    <desc>
+      Starts a conversation (cutscene) with the specified params. It first tries to find a character specific conversation and falls back on a default conversation if no character specific conversation is found. If no default conversation is found, this command does nothing. (Example: conv conv01 when playing as reimu tries to find conv01_reimu, then conv01, then silently fails.)
+    </desc>
+    <params>
+	  <param name="conversation" type="Conversation"/>
+	  <param name="params" type="vararg"/>
+	</params>
+  </command>
+  <command name="say">
+    <desc>
+      Use only inside conversations. Slot specifies which character is talking (0=left, 1=right), name determines the displayed name and text is the printed text. You are responsible yourself for making sure the text fits inside the text box.
+    </desc>
+    <params>
+	  <param name="slot" type="u8"/>
+	  <param name="name" type="string"/>
+	  <param name="text" type="string"/>
+	</params>
+  </command>
+  <command name="conv_image">
+    <desc>
+      Use only inside conversations. Slot determines which image position to change (0=left, 1=right). The image should be in raw RGBA format, 112x112 pixels and the file-ext should be ".dta". The image is a path relative to "TouhouDS/games/[game_id]/img" and you shouldn't specify the file-ext. (Example: conv_image 0 "cirno_happy", displays the image "/TouhouDS/games/test_game/img/cirno_happy.dta" in the left slot). Note: You can use ImageConverter.jar in /TouhouDS/tools/ to convert images to raw RGBA.
+    </desc>
+    <params>
+	  <param name="slot" type="u8"/>
+	  <param name="image" type="string"/>
+	</params>
+  </command>
+  <command name="conv_clear">
+    <desc>
+      Use only inside conversations. Removes the image currently shown in the specified slot (0=left, 1=right).
+    </desc>
+    <params>
+	  <param name="slot" type="u8"/>
+	</params>
+  </command>
+  <command name="bg_control">
+    <desc>
+      Changed the background scroll-speed to (dx, dy).
+    </desc>
+    <params>
+	  <param name="dx" type="f32"/>
+	  <param name="dy" type="f32"/>
+	</params>
+  </command>
+  <command name="sfx">
+    <desc>
+      Plays the named sound effect. The path specified is relative to "/TouhouDS/games/[game_id]/[route_id]/[stage_id]/". The sound effect should be in RAW MS IMA ADPCM MONO 22050Hz. ADPCM inside WAV containers won't work (use ima2raw to remove the WAV container). Note: You can use SoundEncoder.jar in /TouhouDS/tools/ to convert  sound files to RAW ADPCM.
+    </desc>
+    <params>
+	  <param name="filename" type="string"/>
+	</params>
+  </command>
+  <command name="size">
+    <desc>
+      Stretces the sprite's drawn image to (w, h)
+    </desc>
+    <params>
+	  <param name="w" type="u16"/>
+	  <param name="h" type="u16"/>
+	</params>
+  </command>
+  <command name="draw_angle">
+    <desc>
+      Changes the image angle and/or image angle mode. The default mode for shots is auto (drawAngle=angle), manual changes the drawAngle to value, rotate increases drawAngle by value.
+    </desc>
+    <params>
+	  <param name="mode" type="drawAngleMode"/>
+	  <param name="value" type="u16"/>
+	</params>
+  </command>
+
+</commands>

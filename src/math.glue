@@ -1,0 +1,18 @@
+
+fixed abs(fixed v);
+fixed min(fixed a, fixed b);
+fixed max(fixed a, fixed b);
+fixed ceil(fixed v);
+fixed floor(fixed v);
+fixed round(fixed v);
+fixed signum(fixed v); //(v >= 0 ? (v > 0 ? 1 : 0) : -1) 
+
+fixed sin(fixed a);
+fixed asin(fixed v);
+fixed cos(fixed a);
+fixed acos(fixed v);
+fixed tan(fixed a);
+fixed atan2(fixed dy, fixed dx);
+
+//Calculates the angle from (x0, y0) to (x1, y1)
+fixed angleBetween(fixed x0, fixed y0, fixed x1, fixed y1);

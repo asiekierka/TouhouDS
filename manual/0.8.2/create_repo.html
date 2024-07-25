@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual - Creating a download repository</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div style="background-color: #CCCCCC; padding: 5px;">
+      <a href="commands.xml">Command Reference</a> - 
+      <a href="types.xml">Command Data Types</a>
+    </div>
+    <div>
+      <h3>Adding a repository</h3>
+      <p>Open TouhouDS/repo.txt and add the line (changing Repo Name and the url to appropriate values):
+      <pre style="background-color: #DDDDDD; padding: 10px;">Repo Name;http://www.example.com/repo</pre>
+
+      </p>
+
+      <h3>Creating a repository</h3>
+      <p>Start with this <a href="repo_template.zip">template</a>.</p>
+      <p>The basic folder layout of a repository:
+        <pre style="background-color: #DDDDDD; padding: 10px;">+ root
++-+ repo-1.0.2
+  +-- repo.ini
+  +-- chara.txt
+  +-- games.txt
+  +-+ chara
+  + +-- &lt;character_packages&gt;
+  +
+  +-+ games
+    +-- &lt;game_packages&gt;</pre>
+        The root folder contains subfolders for each supported script version (named repo-{$version}). These folders have a repo.ini file that contains the script version and the paths to the character and game lists. The format of chara.txt and games.txt is:
+        <pre style="background-color: #DDDDDD; padding: 10px;">id;name;version;created_timestamp;author;chara/filename.zip;description
+
+id = a unique identifier, equal to the character's *.ini and datafolder names.
+name = Human readable name, same as in character's *.ini
+version = Character version number, same as in character's *.ini
+created_timestamp = UNIX timestamp of the last update time
+author = Name of the person that made the character
+filename = The relative path to an uncompressed ZIP file containing the character data.
+description = Short description that gets shown on the download screen.
+
+For games.txt, the format is exactly the same.</pre>
+      </p>
+    </div>
+  </body>
+</html>

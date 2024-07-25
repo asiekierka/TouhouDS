@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>TouhouDS Manual</title>
+    <link id="main_style" rel="stylesheet" type="text/css" href="default.css"/>
+  </head>
+  <body>
+    <div class="page">
+      <div class="pageIndex">
+        <h3>Page Index</h3>
+        <ul>
+          <li><a href="#general">General Notes</a></li>
+            <ul>
+              <li><a href="#utf-8">Character Encodings and Filenames</a></li>
+              <li><a href="#tex">Textures</a></li>
+            </ul>
+          <li><a href="#chara">Characters</a></li>
+          <li><a href="#games">Games</a></li>
+          <li><a href="#repo">Repositories</a></li>
+          <li><a href="#script">Scripting</a></li>
+        </ul>
+      </div>
+
+      <a name="general" href="#general"><h2>General Notes</h2></a>
+      
+        <a name="utf-8" href="#utf-8"><h3>Character Encodings and Filenames</h3></a>
+        <p><strong>Use only <a href="http://en.wikipedia.org/wiki/Ascii#ASCII_printable_characters">ASCII</a> characters in filenames</strong>. And please don't rely on the file system being case sensitive (is "ABC.txt" the same as "abc.txt"?).</p>
+        <p><strong>All text files should be saved as <a href="">UTF-8</a></strong>. This allows you to use non-latin characters like "博麗　霊夢".</p>
+      
+        <a name="tex" href="#tex"><h3>Textures</h3></a>
+        <p>In several configuration files we need to point to a texture. Textures are stored in a format that can be directly read by the video hardware in the Nintendo DS. There are several slightly different texture formats and we need to specify which format they are when we point to a texture. Therefore, a texture reference has the form <em>base_filename:tex_format</em>. Where <em>base_filename</em> is the name of the texture file without the file-extension and </em>tex_format</em> is one of: A3I5, A5I3, RGB256, RGBA. Textures consist of two files: <em>base_filename.dta</em> and <em>base_filename.pal</em>. In the <em>tools</em> folder is a Java program (<em>TextureConverter.jar</em>) that converts images to textures.</p>
+    
+      <a name="chara" href="#chara"><h2>Characters</h2></a>
+
+      <table class="fig">
+        <tr><td><img src="chara/01-chara-folder.png" alt="TouhouDS/chara folder listing" /></td></tr>
+        <tr><th>chara folder contents</th></tr>
+      </table>      
+      
+      <p>Creating your own player-controlled characters is probably the easiest thing to modify. You can find all your installed characters inside the <em>chara</em> folder.</p>
+
+      <p>As you can see, a character definition is made up from a .ini file and a folder. The base filenames ("reimu", "marisa", etc.) correspond to the character's ID. Character IDs are unique names that make it possible to distinguish between different characters. When you create your own character, please use an ID that's likely to be unique (use "eva-lu-ator-91-reimu" rather than "my-reimu"). Character IDs should only consist of the following characters: [A-Za-z0-9_-]</p>
+      
+      <p>The <em>chara-id.ini</em> file contains general information about the character: name, version, stats, etc. The <em>chara-id</em> folder contains data (like images) and script files. We'll first look at the <em>chara-id</em> file.</p>
+      
+      <a name="chara-id.ini"></a>
+      <h3>chara-id.ini</h3>
+      <pre class="code" style="height: 10em;">script_version=1.1.0
+version=1.0.3
+code=Marisa
+
+#personal info
+name=Marisa
+portrait=portrait.png
+desc=Golden eyes, blond hair, a braid on only one side of her face, carries a bamboo and straw broom. Wears a black witch's hat with a large pink ribbon, and a black and light pink outfit with a white apron.
+
+#stats
+shot_power_mul=1.0
+speed=3.0
+speed_focus=1.0
+bombs=2
+graze_range=10
+hitbox=2
+
+#other
+texture=tex_marisa:A3I5
+bomb=default
+bomb_focus=master_spark</pre>
+      
+      <p>The file consists of simple "<em>name</em>=<em>value</em>" lines. You can also see some lines starting with a '<em>#</em>' character. These lines are comments and don't mean anything to the program.</p>
+      
+      <p>The first two lines specify two important version numbers. Version numbers in TouhouDS should always be in <em>x.y</em> or <em>x.y.z</em> format (<em>1.2</em> is ok, <em>3.0Alpha</em> is wrong). The first version number (<em>version</em>) says some thing about the version number for the character. When you make a new character you usually set the version number to <em>1.0.0</em>, then if you make an improvement to the character later on you increase the version number. This makes it possible to determine which one is newest when comparing two different versions of the same character (this is important for <a href="#repo">Repositories</a>).</p>
+      <p>The <em>code</em> field is there to optionally specify a LUA table name for the player script. If the code field is not specified, the program looks for a "player_fire.pds" file (old script format).</p>
+      
+      <p>The next part of the file (starting at <em>#personal info</em>) has three more properties:</p>
+      <table class="desc">
+        <tr><td><strong>name</strong></td><td>Human readable name of the character, usually similar to the character ID. Note that you can use non-latin characters for here, see: <a href="#utf-8">Character Encodings and Filenames</a></td></tr>
+        <tr><td><strong>portrait</strong></td><td>Filename pointing to a portrait image (a full-color PNG). The portrait is used on the character select screen.</td></tr>
+        <tr><td><strong>desc</strong></td><td>A short description of the character and its backstory.</tr>
+      </table>
+
+      <p>After the personal info, we have character stats:</p>
+      <table class="desc">
+        <tr><td><strong>shot_power_mul</strong></td><td>Shot power multiplier. Influences the relative power of shots fired by this player.</td></tr>
+        <tr><td><strong>speed</strong></td><td>Movement speed while unfocused.</td></tr>
+        <tr><td><strong>speed_focus</strong></td><td>Movement speed while focused.</td></tr>
+        <tr><td><strong>bombs</strong></td><td>Number of bombs.</td></tr>
+        <tr><td><strong>graze_range</strong></td><td>Bullets that pass by the player at a <em>distance</em> &lt; <em>graze_range</em> cause a graze event.</td></tr>
+        <tr><td><strong>hitbox</strong></td><td>Hit circle radius.</td></tr>
+      </table>
+
+      <p>Finally, the properties under the <em>#other</em> comment:</p>
+      <table class="desc">
+        <tr><td><strong>texture</strong></td><td>A <a href="#tex">Texture Reference</a></td></tr>
+        <tr><td><strong>bomb</strong></td><td>The <em>bombID</em> of the type of bomb to use while bombing unfocused.</td></tr>
+        <tr><td><strong>bomb_focus</strong></td><td>The <em>bombID</em> of the type of bomb to use while bombing focused.</td></tr>
+      </table>
+      
+      <div style="clear: both;"></div>      
+      <h3>Character Data Folder</h3>
+
+      <table class="fig">
+        <tr><td><img src="chara/02-chara-data-folder.png" alt="TouhouDS/chara/chara-id folder" /></td></tr>
+        <tr><th>character data folder</th></tr>
+      </table>      
+      
+      <p>The character's data folder contains all data files (scripts/images) used by the character. This typically includes the following files:</p>
+      <table class="desc">
+        <tr><td><strong>icon.dta</strong></td><td>A texture (64x48, RGBA format) used for the selection icon on the Character Select screen.</td></tr>
+        <tr><td><strong>*.lua</strong></td><td>The player scripts (contain the definition for the LUA table specified in the player's code property).</td></tr>
+        <tr><td><strong>(player_fire.pds)</strong></td><td>A player fire script using the old (before v0.9) scripting language. Not used when a LUA player script is available. Contains 8 spells (fire[0-4] and fire_focus[0-4]) that determine the fire pattern for the character.</td></tr>
+        <tr><td><strong>portrait.png</strong></td><td>The portrait image (see <em>portrait</em> property in <em>chara-id.ini</em> file).</td></tr>
+        <tr><td><strong>[chara-id].dta/.pal</strong></td><td>The character's in-game texture. The individual frames of animation as well as the images for its bullets are subrects in this image.</td></tr>
+      </table>
+      
+      <div style="clear: both;"></div>            
+      <a name="games" href="#games"><h2>Games</h2></a>    
+      <p>In TouhouDS all stages are packaged in bundles (games). A game contains a number of routes, and these routes contain the stages. Routes can be used to create difficulty settings, but also to create (unlockable) extra stages. Like most user-definable things in TouhouDS, games consist of a data folder and a .ini file:</p>
+      
+      <h3>game-id.ini</h3>      
+      <pre class="code">script_version=1.1.0
+version=1.0.3
+name=Demo Game
+desc=Short paragraph describing the game goes here
+banner=banner.png</pre>
+      <p>Like with the <a href="#chara-id.ini">character .ini file</a> the first two lines declare the release number and the script version used. The other properties are:</p>
+
+      <table class="fig">
+        <tr><td><img src="games/01-game-folder.png" alt="TouhouDS/games/game-id folder" /></td></tr>
+        <tr><th>game data folder</th></tr>
+      </table>      
+
+      <table class="desc">
+        <tr><td><strong>name</strong></td><td>Human readable game name.</td></tr>
+        <tr><td><strong>desc</strong></td><td>Short description of the game or its backstory.</td></tr>
+        <tr><td><strong>banner</strong></td><td>An image path relative to the game data folder. The image is shown in the top screen during game selection.</td></tr>
+      </table>
+      
+      <p>The game's data folder has two subfolders for common media (<em>bgm</em> for music, <em>img</em> for conversation images). In addition, the game's routes are stored in this folder. Every route has a .ini file and a data folder.</p>
+      
+      <h3>route-id.ini</h3>      
+      <pre class="code">name=Normal
+locked=false</pre>
+      <table class="desc">
+        <tr><td><strong>name</strong></td><td>Human readable route name.</td></tr>
+        <tr><td><strong>locked</strong></td><td>Use <em>true</em> or <em>false</em> to lock/unlock the route.</td></tr>
+      </table>
+
+      <p>Inside the route's data folder are its stages. Once again split into .ini files and data folders. Stages have fixed ID's, they should be named <em>stage1</em>, <em>stage2</em>, etc. numbered consecutively.</p>
+      <h3>stage-N.ini</h3>      
+      <pre class="code">name=First Stage
+desc=This is a demo stage, you can change this text
+unlocks=extra,extra2
+tex_boss=tex_boss_cirno:A3I5
+tex_background=tex_background:RGB256</pre>
+      <table class="desc">
+        <tr><td><strong>name</strong></td><td>Human readable stage name.</td></tr>
+        <tr><td><strong>desc</strong></td><td>Short stage description.</td></tr>
+        <tr><td><strong>unlocks</strong></td><td>Comma-separated list of route-ids. When the player finishes this stage, the specified routes will be unlocked.</td></tr>
+        <tr><td><strong>tex_boss</strong></td><td>Stage boss texture name and format. Works similarly to the <em>texture</em> property in <a href="#chara-id.ini"><em>chara-id.ini</em></a>.</td></tr>
+        <tr><td><strong>tex_background</strong></td><td>Stage background texture.</td></tr>
+      </table>
+      
+      <p>The stage's data folder contains the textures specified in the .ini file. In addition, it contains any non-standard sound effects used by its scripts. The stage scripts are the last thing stored in the stage data folder. The stage script can be split over multiple .lua files. More information about scripting can be found <a href="lua.html">here</a>.</p>
+      
+      <div style="clear: both;"></div>            
+
+      <a name="repo" href="#repo"><h2>Repositories</h2></a>
+      <p>Repositories are special download sites that can offer games or characters for download. The in-game download function uses these repositories to find things to download. You can edit <em>repo.txt</em> to add/edit/remove repositories. The file format is very simple, every line has the form "<em>name</em>;<em>url</em>".</p>
+
+      <p>You can easily create your own repositories by using the "CreateRepo.jar" program in the TouhouDS/tools folder. You point it to your TouhouDS install folder and it generates a repository containing all characters and games you have installed.</p>
+      
+      <a name="script" href="#script"><h2>Scripting</h2></a>
+
+        <a name="lua" href="#lua"><h3>LUA</h3></a>
+        <p>From v0.9 onwards it's possible to write scripts in <a href="http://en.wikipedia.org/wiki/Lua_%28programming_language%29">LUA</a> (<a href="http://www.lua.org/manual/5.1/manual.html">manual</a>).</p>
+        
+        <p>Full information about scripting TouhouDS using LUA can be found <a href="lua.html">here</a></p>
+
+        <a name="charaScript" href="#charaScript"><h3>Character Scripts</h3></a>
+        <p>Use the code property in <em>chara-id.ini</em> to specify a LUA table name. Declare that table in lua scripts stored in the character's data folder. Try to look at existing character scripts if you're unsure how to do something. More information can be found <a href="lua.html#player">here</a>.</p>
+        
+    </div>
+  </body>
+</html>

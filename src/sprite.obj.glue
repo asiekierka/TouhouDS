@@ -1,0 +1,44 @@
+
+void setPos(fixed x, fixed y);
+void setSpeed(fixed spd);
+void setSpeedInc(fixed spdi);
+void setAngle(fixed a);
+void setAngleInc(fixed ai);
+void setPower(fixed pwr);
+void setColCircle(int id, fixed rad);
+void setColSegment(int id, bool autoRotate, fixed dx, fixed dy, fixed thickness);
+void removeColNode(int id);
+void setDrawSize(fixed w, fixed h);
+void setDrawAngle(int drawAngleMode, fixed angle);
+void setVisible(bool v);
+void setImage(int texType, int x, int y, int w, int h);
+void setInvincibleTime(int time);
+void setZ(int z);
+void setDieOutsideBounds(bool d);
+
+fixed getX();
+fixed getY();
+fixed getSpeed();
+fixed getSpeedInc();
+fixed getAngle();
+fixed getAngleInc();
+fixed getPower();
+fixed getDrawWidth();
+fixed getDrawHeight();
+fixed getDrawAngle();
+int   getDrawAngleMode();
+bool  isVisible();
+bool  isDestroyed();
+int   getInvincibleTime();
+int   getZ();
+bool  getDieOutsideBounds();
+
+void advance(fixed dist);
+void advanceSide(fixed dist);
+void die();
+void drop(int itemType, int amount);
+
+void slowMove(fixed targetX, fixed targetY, fixed speed);
+void slowAccel(fixed targetSpeed, fixed accel);
+void slowTurn(fixed targetAngle, fixed turnSpeed);
+void slowTurnTo(fixed targetX, fixed targetY, fixed turnSpeed);

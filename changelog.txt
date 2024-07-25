@@ -1,0 +1,140 @@
+===============================================================================
+ v0.9 2009-12-27
+===============================================================================
+
+bugfixes:
+    - On-screen keyboard was broken.
+
+improvements:
+    - Added support for writing scripts in LUA.
+    - Update to tools (new TextureConverter & repository creation tool).
+    - Improved collision system which lifts the maxsize=64x64 restriction and
+      gives a choice between line-segment and circle collision shapes.
+    - Added sixth stage + new playable character.
+    - Added the option to change starting lives.
+
+===============================================================================
+ v0.8.2 2009-05-21
+===============================================================================
+
+bugfixes:
+	- Game crashed after a certain number of spellcards.
+
+improvements:
+	- Decreased memory usage and memory fragmentation
+    - References to spellbooks cache their results for better performance.
+
+===============================================================================
+ v0.8.1 2009-05-14
+===============================================================================
+
+bugfixes:
+	- The score screen's scrollpane didn't start out showing the highest score.
+	- The game selection on the score screen didn't work properly.
+	- Fixed a memory leak in the sound manager.
+	- Objects with hitbox=0 would still cause collisions.
+
+improvements:
+	- Support for multiple/selfmade download repositories
+	- Deathbombing no longer requires 2 bombs and after dying there's a small
+	  period where bombing is disabled to avoid losing a bomb because you were
+	  too late trying to deathbomb.
+	- Nicer character select screen
+	- Added a fifth stage + small improvements to older stages
+	- Added Sanae as a character
+
+scripting language:
+    - Added _for, size, drawAngle commands
+
+===============================================================================
+ v0.8   2009-03-20
+===============================================================================
+
+bugfixes:
+    - The installation checker was broken andcaused a red screen of death in
+      case of an invalid installation.
+    - Fixed an rare case where the collision detection would fail.
+    - After losing your lives, selecting restart but cancelling the
+      confirmation would erroneously give the option to continue playing.
+    - Graphical glitches occurred when using master spark.
+
+improvements:
+    - Improved sound effects
+    - Background plane tilted in 3D
+    - Added deathbombing
+    - Added Youmu & Yuka as playable characters
+    - Gave Sakuya a proper bomb
+    - Added a wifi config screen
+    - Added a fourth level
+    - 10~20% performance increase
+
+scripting language:
+    - Animation support (boss, object, shot)
+    - Support for playing sound effects
+    - Commands added to allow for character conversations. You can specify a
+      default conversation and/or specific conversations depending on the
+      selected player character.
+    - Stricter type-checking in the script compiler, better error reporting
+
+===============================================================================
+ v0.7   2008-11-17
+===============================================================================
+
+bugfixes:
+    - Shows an error message instead of silently crashing in the case of a
+      broken installation.
+    - The current score was added to the list of high-scores twice if you
+      used restart or quit after losing all your lives.
+    - Pausing the game stopped the music, it now only stops sound effects.
+    - After completing all stages, the game sometimes crashed.
+    - Script errors in stages other than the first weren't shown to the user.
+    - After a boss' spellcard finishes, -all- enemy projectiles are now
+      destroyed, not just those of the ENEMY_SHOT type.
+    - Instead of overwriting the default textures, user-specified textures
+      were added -after- the existing textures. This limited the max. texture
+      memory to 32KB.
+
+improvements:
+    - Internal script compiler now does basic type-checking.
+    - Meaningful error messages in the script compiler.
+    - Added (beta) support for downloading additional characters from within
+      the game using wifi.
+    - Rewrote a large portion of the scripting manual.
+    - Support for multiple routes per game. Routes are commonly used to create
+      a selectable difficulty setting.
+    - The score overview shown at the end of every stage works now.
+    - Both stages and routes can now be locked/unlocked. Read the manual for
+      more info.
+    - Added a third stage.
+
+===============================================================================
+ v0.6   2008-09-29
+===============================================================================
+
+bugfixes:
+    - Fixed a memory leak in the parser. Some temporary memory wasn't released
+      correctly which caused the program to run out of memory prematurely.
+    - Using the restart button several times caused the game to hang. This
+      doesn't happen anymore now the memory leak in the parser has been
+      resolved.
+    - After exiting a level using the quit option, sprites would get bugged.
+      For example, transparent areas would turn white or certain images
+      would be flipped.
+    - Fixed a text-positioning bug in the text renderer.
+    - Calling a spell or object from another script file didn't work.
+
+improvements:
+    - Replaced the player and enemy graphics by larger and better looking ones.
+    - Improved hitbox-center-indicator visibility.
+    - Better antialiasing for the DS buttons on the options screen.
+    - Added scores and hi-scores. Hi-Scores are saved per game, difficulty,
+      character.
+    - The game now shows a Restart/Quit selection when you lose all your lives
+      instead of just continuing.
+    - You can now have more than one level.
+    - The default textures can be overridden on a per-level basis.
+    - Added a command to the scripting language that can change the background
+      music.
+    - Reimu now has homing bullets.
+
+===============================================================================
