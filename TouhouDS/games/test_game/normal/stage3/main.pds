@@ -1,0 +1,164 @@
+define spell main
+bgm "bgm.mp3"
+wait 60
+call platoon
+wait 180
+call flyby
+wait 180
+call thugs
+wait 180
+call thugs
+wait 180
+create_boss boss.endboss
+
+#===============================================================================
+#Thugs
+#===============================================================================
+define spell thugs
+create thug_fairy 80 120
+create thug_fairy 176 120
+wait 60
+create thug_fairy 80 80
+create thug_fairy 176 80
+wait 400
+
+define object thug_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 400
+pos $1 -16
+:life:
+move_to $1 $2 1
+call star_fire_loop 2
+die
+:death:
+call fairy_dead
+
+#===============================================================================
+#Flyby
+#===============================================================================
+define spell flyby
+create star_fairy 224 32
+call flyby2
+
+define spell flyby2
+create flyby_fairy
+wait 40
+_loop 20
+
+define object flyby_fairy
+:init:
+call fairy_init 0
+pos 64 -24
+speed 3
+angle_inc -2
+power 10
+:life:
+wait 20
+sfx "shoot.wav"
+fire flyby_shot
+angle_inc -1
+wait 20
+sfx "shoot.wav"
+fire flyby_shot
+angle_inc 0
+wait 20
+sfx "shoot.wav"
+fire flyby_shot
+speed_to 0 0.1
+sfx "shoot.wav"
+fire flyby_shot
+move_to 300 128 1
+die
+:death:
+call fairy_dead
+
+define object flyby_shot
+:init:
+image tex_bullet 8 24 8 8
+hitbox 4
+speed 3.5
+angle player
+:life:
+turn ~-16:16;1
+:death:
+
+#===============================================================================
+#Wave Fairies
+#===============================================================================
+define object star_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 400
+pos 128 -16
+:life:
+move_to $1 $2 .5
+call star_fire_loop 15
+die
+:death:
+drop power_large 1
+drop point 10
+drop point_large 2
+
+define spell star_fire_loop
+_for 0 448 64
+fire star_fire $$
+wait $1
+_for 16 464 64
+fire star_fire $$
+wait $1
+_for 32 480 64
+fire star_fire $$
+wait $1
+_for 48 496 64
+fire star_fire $$
+wait $1
+_loop 8
+
+define object star_fire
+:init:
+image tex_bullet 0 16 8 8
+hitbox 4
+speed 3.5
+angle $1
+:life:
+:death:
+
+#===============================================================================
+#Platoon
+#===============================================================================
+define spell platoon
+_for 16 240 32
+create platoon_fairy $$
+wait 20
+_for 32 224 32
+create platoon_fairy $$
+wait 20
+_loop 5
+
+define object platoon_fairy
+:init:
+call fairy_init 0
+pos $1 -24
+speed 3
+:life:
+:death:
+call fairy_dead
+
+#===============================================================================
+#Regular Fairies
+#===============================================================================
+
+define spell fairy_init
+anim anims.fairy_anim $1
+hitbox 10
+power 4
+speed 3
+
+define spell fairy_dead
+drop power 1 80
+drop point 1 80
+
+#===============================================================================

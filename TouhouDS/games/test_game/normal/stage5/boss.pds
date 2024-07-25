@@ -1,0 +1,243 @@
+define boss endboss
+:init:
+chara_anim idle a_mokou_idle
+chara_anim tween_right a_mokou_tween_right
+chara_anim right a_mokou_right
+hitbox 25
+pos 128 -16
+:life:    
+bgm "mokou.mp3"
+boss_name "Mokou"
+boss_num_spellcards 4
+move_to 128 64 0.5
+boss_spell "Burning ring of fire" 500 2400 boss01
+wait 30
+move_to 128 64 1.5
+boss_spell "Phoenix Down" 1000 2400 boss02
+wait 30
+move_to 128 64 1
+boss_spell "Caldera" 1000 2400 boss04
+wait 30
+move_to 128 64 1
+boss_spell "Krakatoa" 1000 2400 boss03
+:death:
+end_stage
+
+#===============================================================================
+#Animations
+#===============================================================================
+
+define animation a_mokou_idle
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 42 0 42 42
+wait 10
+
+define animation a_mokou_tween_right
+image tex_boss 0 42 42 42
+wait 10
+
+define animation a_mokou_right
+image tex_boss 0 42 42 42
+wait 10
+
+#===============================================================================
+#Spellcard 04
+#===============================================================================
+
+define spell boss04
+move_to ~128:160;8 ~32:64;8 1
+call boss04_fire1
+move_to ~160:192;8 ~32:64;8 1
+call boss04_fire1
+move_to ~192:224;8 ~32:64;8 1
+call boss04_fire1
+move_to ~160:192;8 ~32:64;8 1
+call boss04_fire2
+move_to ~128:160;8 ~32:64;8 1
+call boss04_fire1
+move_to ~96:128;8 ~32:64;8 1
+call boss04_fire1
+move_to ~64:96;8 ~32:64;8 1
+call boss04_fire1
+move_to ~96:128;8 ~32:64;8 1
+call boss04_fire2
+_loop
+
+define spell boss04_fire1
+sfx "shoot.wav"
+_for 0 512 8
+fire red_card $$
+wait 12
+_loop 4
+
+define spell boss04_fire2
+sfx "shoot.wav"
+_for 4 512 10
+fire blue_card $$
+wait 12
+_loop 3
+
+define object red_card
+:init:
+hitbox 3
+image tex_bullet 32 16 8 8
+angle $1
+speed 2.0
+advance 10
+:life:
+:death:
+
+define object blue_card
+:init:
+hitbox 3
+image tex_bullet 32 24 8 8
+angle $1
+speed 3
+advance 10
+:life:
+:death:
+
+#===============================================================================
+#Spellcard 03
+#===============================================================================
+
+define spell boss03
+call boss03_sub
+angle ~0:511;1
+speed 0.5
+wait 5
+call boss03_sub
+move_to ~32:192;32 64 1
+_loop
+
+define spell boss03_sub
+sfx "shoot.wav"
+_for 0 512 32
+fire ember_shot2 $$ 40
+wait 5
+sfx "shoot.wav"
+_for 8 512 32
+fire ember_shot2 $$ 35
+wait 5
+sfx "shoot.wav"
+_for 16 512 32
+fire ember_shot2 $$ 20
+wait 5
+sfx "shoot.wav"
+_for 24 512 32
+fire ember_shot2 $$ 25
+wait 5
+
+define object ember_shot2
+:init:
+anim ember_shot_anim
+hitbox 3
+speed 2
+angle $1
+#advance 10
+:life:
+speed_to 0 0.05
+wait $2
+speed_to 3 0.1
+:death:
+
+#===============================================================================
+#Spellcard 02
+#===============================================================================
+
+define spell boss02
+sfx "shoot.wav"
+fire phoenix_shot player
+wait 20
+sfx "shoot.wav"
+fire phoenix_shot player
+wait 20
+sfx "shoot.wav"
+fire phoenix_shot player
+wait 80
+move_to ~48:208;16 ~16:64;16 2
+_loop
+
+define object phoenix_shot
+:init:
+image tex_boss 64 64 64 64
+hitbox 16
+speed 0.5
+speed_inc 0.10
+angle $1
+angle_inc ~-1:1;1
+advance 32
+:life:
+fire phoenix_shot_trail
+wait 8
+_loop
+:death:
+
+
+define object phoenix_shot_trail
+:init:
+hitbox 3
+anim ember_shot_anim
+speed 0
+:life:
+wait 30
+speed_inc 0.05
+:death:
+
+#===============================================================================
+#Spellcard 01
+#===============================================================================
+
+define spell boss01
+speed_inc 0
+speed_to 1 0.1
+call boss01_burn3
+turn_to player 32
+speed_to 2 0.1
+call boss01_burn1
+speed_inc -0.05
+call boss01_burn2
+_loop
+
+define spell boss01_burn1
+_for 1 4 1
+fire ember_shot ~0:511;1 -0.05 20
+wait 5
+_loop 4
+
+define spell boss01_burn2
+_for 1 8 1
+fire ember_shot ~0:511;1 -0.01 60
+wait 5
+_loop 4
+
+define spell boss01_burn3
+_for 1 6 1
+fire ember_shot ~0:511;1 0 180
+wait 5
+_loop 4
+
+define object ember_shot
+:init:
+hitbox 3
+anim ember_shot_anim
+speed 2
+speed_inc $2
+angle $1
+advance 10
+:life:
+wait $3
+die
+:death:
+
+define animation ember_shot_anim
+image tex_boss 42 42 21 21
+wait 13
+image tex_boss 63 42 21 21
+wait 13
+image tex_boss 84 42 21 21
+wait 13
+image tex_boss 105 42 21 21
+wait 13
+_loop

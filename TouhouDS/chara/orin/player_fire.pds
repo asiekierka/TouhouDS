@@ -1,0 +1,69 @@
+define spell fire0
+fire shot $1 0
+
+define spell fire1
+fire shot $1 0
+fire shot2 $2 -64
+fire shot2 $2 64
+
+define spell fire2
+fire shot $1 0
+fire shot2 $2 -80
+fire shot2 $2 -64
+fire shot2 $2 64
+fire shot2 $2 80
+
+define spell fire3
+fire shot $1 0
+fire shot2 $2 -96
+fire shot2 $2 -80
+fire shot2 $2 -64
+fire shot2 $2 64
+fire shot2 $2 80
+fire shot2 $2 96
+
+define spell fire_focus0
+fire shot $1 0
+
+define spell fire_focus1
+fire shot $1 0
+fire shot2 $2 -32
+fire shot2 $2 32
+
+define spell fire_focus2
+fire shot $1 0
+fire shot2 $2 -40
+fire shot2 $2 -32
+fire shot2 $2 32
+fire shot2 $2 40
+
+define spell fire_focus3
+fire shot $1 0
+fire shot2 $2 -48
+fire shot2 $2 -40
+fire shot2 $2 -32
+fire shot2 $2 32
+fire shot2 $2 40
+fire shot2 $2 48
+
+define object shot
+:init:
+image tex_player 0 96 32 32
+hitbox 10
+speed 12
+power $1
+angle $2
+:life:
+:death:
+
+define object shot2
+:init:
+image tex_player 32 96 32 32
+hitbox 6
+speed 12
+power $1
+angle $2
+:life:
+turn_to enemy 8
+wait 6
+:death:

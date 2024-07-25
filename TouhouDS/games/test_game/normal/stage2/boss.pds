@@ -1,0 +1,106 @@
+define boss endboss
+:init:
+image tex_boss 0 0 40 40
+hitbox 25
+pos 128 -16
+chara_anim idle a_chen_idle
+chara_anim tween_right a_chen_tween_right
+chara_anim right a_chen_right
+:life:    
+bgm "chen.mp3"
+boss_name "Chen"
+boss_num_spellcards 2
+move_to 128 64 .5
+boss_spell "Easy Spellcard" 750 1800 boss_01
+wait 60
+move_to 128 64 .5
+boss_spell "Hard Spellcard" 750 2400 boss_02
+:death:
+end_stage
+
+define spell boss_01
+call boss_01_shoot
+move_to ~32:224;32 ~32:128;32 .75
+wait 60
+_loop
+
+define spell boss_01_shoot
+sfx "shoot.wav"
+fire shot01 ~188:212;1
+fire shot01 ~216:240;1
+fire shot01 ~244:268;1
+fire shot01 ~272:296;1
+fire shot01 ~300:324;1
+wait 10
+_loop 5
+
+define spell boss_02
+call boss_02_shoot
+move_to ~32:224;32 ~32:128;32 .75
+wait 20
+_loop
+
+define spell boss_02_shoot
+sfx "shoot.wav"
+fire boss_shot_launcher ~188:212;1
+fire boss_shot_launcher ~216:240;1
+fire boss_shot_launcher ~244:268;1
+fire boss_shot_launcher ~272:296;1
+fire boss_shot_launcher ~300:324;1
+wait 5
+_loop 10
+
+define object boss_shot_launcher
+:init:
+image tex_bullet 0 32 8 8
+hitbox 4
+speed 4
+angle $1
+:life:
+wait ~30:45;1
+fire boss_drop_shot
+die
+:death:
+
+define object boss_drop_shot
+:init:
+image tex_bullet 0 40 8 8
+hitbox 4
+angle 256
+:life:
+speed_to ~2:4;0.1 0.25
+:death:
+
+define object shot01
+:init:
+image tex_bullet 0 16 8 8
+hitbox 4
+speed 4
+angle $1
+:life:
+:death:
+
+#===============================================================================
+#Animations
+#===============================================================================
+
+define animation a_chen_idle
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 42 0 42 42
+wait 10
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 84 0 42 42
+wait 10
+
+define animation a_chen_tween_right
+image tex_boss 0 84 42 42
+wait 10
+image tex_boss 42 84 42 42
+wait 10
+
+define animation a_chen_right
+image tex_boss 84 84 42 42
+wait 10
+

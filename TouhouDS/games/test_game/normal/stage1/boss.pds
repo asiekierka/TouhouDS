@@ -1,0 +1,96 @@
+
+define boss endboss
+:init:
+chara_anim idle a_cirno_idle
+chara_anim tween_right a_cirno_tween_right
+chara_anim right a_cirno_right
+hitbox 25
+pos 128 -42
+:life:
+bgm "cirno.mp3"
+boss_name "Cirno"
+boss_num_spellcards 1
+move_to 128 64 .5
+boss_spell "Icicle Fall" 1000 1800 boss01
+:death:
+end_stage
+
+#===============================================================================
+#Animations
+#===============================================================================
+
+define animation a_cirno_idle
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 42 0 42 42
+wait 10
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 84 0 42 42
+wait 10
+
+define animation a_cirno_tween_right
+image tex_boss 0 42 42 42
+wait 10
+image tex_boss 42 42 42 42
+wait 10
+image tex_boss 84 42 42 42
+wait 10
+
+define animation a_cirno_right
+image tex_boss 0 84 42 42
+wait 10
+image tex_boss 42 84 42 42
+wait 10
+
+#===============================================================================
+#Spellcard 01
+#===============================================================================
+
+define spell boss01
+sfx "shoot.wav"
+fire idiot_icicle 160 256
+fire idiot_icicle 352 256
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 268
+fire idiot_icicle 352 244
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 280
+fire idiot_icicle 352 232
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 292
+fire idiot_icicle 352 220
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 304
+fire idiot_icicle 352 208
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 316
+fire idiot_icicle 352 196
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 328
+fire idiot_icicle 352 184
+wait 20
+sfx "shoot.wav"
+fire idiot_icicle 160 340
+fire idiot_icicle 352 172
+wait 20
+wait 60
+_loop
+
+define object idiot_icicle
+:init:
+image tex_boss 84 84 21 42
+hitbox 10
+speed 2
+angle $1
+advance 16
+:life:
+wait 50
+turn_to $2 16
+:death:

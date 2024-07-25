@@ -1,0 +1,75 @@
+
+
+#===============================================================================
+# Large Fairy
+#===============================================================================
+
+define animation large_fairy_anim
+image tex_enemy 96 0 32 32
+wait 15
+image tex_enemy 96 32 32 32
+wait 10
+image tex_enemy 96 64 32 32
+wait 10
+image tex_enemy 96 96 32 32
+wait 10
+_loop
+
+#===============================================================================
+# Regular Fairies
+#===============================================================================
+
+define animation blue_fairy_anim
+image tex_enemy 0 0 24 24
+wait 10
+image tex_enemy 24 0 24 24
+wait 6
+image tex_enemy 48 0 24 24
+wait 6
+image tex_enemy 72 0 24 24
+wait 10
+_loop
+
+define animation red_fairy_anim
+image tex_enemy 0 24 24 24
+wait 10
+image tex_enemy 24 24 24 24
+wait 6
+image tex_enemy 48 24 24 24
+wait 6
+image tex_enemy 72 24 24 24
+wait 10
+_loop
+
+define animation green_fairy_anim
+image tex_enemy 0 48 24 24
+wait 10
+image tex_enemy 24 48 24 24
+wait 6
+image tex_enemy 48 48 24 24
+wait 6
+image tex_enemy 72 48 24 24
+wait 10
+_loop
+
+define animation yellow_fairy_anim
+image tex_enemy 0 72 24 24
+wait 10
+image tex_enemy 24 72 24 24
+wait 6
+image tex_enemy 48 72 24 24
+wait 6
+image tex_enemy 72 72 24 24
+wait 10
+_loop
+
+define animation fairy_anim
+image tex_enemy 0 $1 24 24
+wait 10
+image tex_enemy 24 $1 24 24
+wait 6
+image tex_enemy 48 $1 24 24
+wait 6
+image tex_enemy 72 $1 24 24
+wait 10
+_loop

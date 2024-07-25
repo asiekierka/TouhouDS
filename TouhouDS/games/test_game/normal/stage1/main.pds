@@ -1,0 +1,298 @@
+
+define spell main
+bgm "bgm.mp3"
+wait 180
+call vertical_scatter -96
+wait 180
+call vertical_scatter 96
+wait 180
+call horizontal 256 96 384 2
+wait 30
+#
+call random_single_fairies
+wait 60
+#
+call scissor_wave
+wait 120
+#
+create large_fairy
+wait 90
+call random_single_fairies
+wait 30
+call random_single_fairies
+wait 180
+#
+call random_single_fairies2
+call random_single_fairies2
+wait 120
+#
+create_boss boss.endboss
+
+#===============================================================================
+# Large Fairy
+#===============================================================================
+
+define object large_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 400
+pos 128 -16
+:life:
+call large_fairy_life
+move_to 0 -999 2
+:death:
+drop power 5
+drop power_large 1
+drop point_large 10
+drop bomb
+
+define spell large_fairy_life
+move_to 128 64 .5
+call lf_fire_01
+_loop 3
+
+define spell lf_fire_01
+fire lf_shot01 200
+fire lf_shot01 228
+fire lf_shot01 256
+fire lf_shot01 284
+fire lf_shot01 312
+wait 15
+_loop 20
+
+define object lf_shot01
+:init:
+image tex_bullet 0 16 8 8
+hitbox 4
+speed 4
+angle $1
+:life:
+:death:
+
+#===============================================================================
+# Scissor Wave
+#===============================================================================
+
+define spell scissor_wave
+call horizontal 0 96 128 2
+call horizontal 256 128 384 2
+call horizontal 0 160 128 2
+call horizontal 256 192 384 2
+call horizontal 0 224 128 2
+#V
+fork horizontal 96 0 256 2
+fork horizontal 160 0 256 2
+fork horizontal 64 0 256 3
+fork horizontal 192 0 256 3
+fork horizontal 140 0 256 4
+fork horizontal 116 0 256 4
+#H
+call horizontal 256 256 384 2
+call horizontal 0 288 128 2
+call horizontal 256 320 384 2
+
+#===============================================================================
+# Random Fairies 2
+#===============================================================================
+
+define spell random_single_fairies2
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+create random_single_fairy2 ~32.0:224.0;32.0
+wait 20
+
+define object random_single_fairy2
+:init:
+anim anims.yellow_fairy_anim
+power 5
+hitbox 10
+pos $1 0
+move ~-64:64 1
+:life:
+move_to $1 64 2
+sfx "shoot.wav"
+fire red_shot ~-15:-5
+fire red_shot ~-5:5
+fire red_shot ~5:15
+speed 2
+turn_to bottom
+:death:
+call fairy_dead
+
+#===============================================================================
+# Random Fairies
+#===============================================================================
+
+define spell random_single_fairies
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+create random_single_fairy ~32.0:224.0;32.0
+wait 30
+
+define object random_single_fairy
+:init:
+anim anims.green_fairy_anim
+power 5
+hitbox 10
+pos $1 0
+move ~-64:64 1
+:life:
+move_to $1 64 2
+wait 5
+sfx "shoot.wav"
+fire red_shot -10
+fire red_shot 0
+fire red_shot 10
+speed 2
+turn_to top
+:death:
+call fairy_dead
+
+#===============================================================================
+# Horizontal Line
+#===============================================================================
+
+define spell horizontal
+create horizontal_fairy $1 $2 $3 $4
+wait 20
+_loop 8
+
+define object horizontal_fairy
+:init:
+anim anims.blue_fairy_anim
+hitbox 10
+pos $1 $2
+angle $3
+speed $4
+:life:
+:death:
+call fairy_dead
+
+#===============================================================================
+# Vertical Scatter
+#===============================================================================
+
+define spell vertical_scatter
+create vertical_scatter_fairy $1 8
+wait 20
+create vertical_scatter_fairy $1 -8
+wait 20
+_loop 3
+
+define object vertical_scatter_fairy
+:init:
+call fairy_init 0 $1 24
+advance_side $2
+:life:
+call vertical_scatter_create
+:death:
+call fairy_dead
+
+define spell vertical_scatter_create
+speed 3
+wait 30
+speed 0
+wait 5
+sfx "shoot.wav"
+fire red_shot -10
+fire red_shot 0
+fire red_shot 10
+speed 2
+turn_to center 1
+wait 8
+turn_to top 1
+
+define object red_shot
+:init:
+image tex_bullet 8 16 8 8
+hitbox 4
+speed 3.5
+angle player
+turn $1
+:life:
+:death:
+
+#===============================================================================
+# Diagonal Line
+#===============================================================================
+
+define spell diagonal_line_backslash
+create $1 0 28
+wait 10
+create $1 0 48
+wait 10
+create $1 0 68
+wait 10
+create $1 0 88
+wait 10
+create $1 0 108
+
+define spell diagonal_line_slash
+create $1 0 -28
+wait 10
+create $1 0 -48
+wait 10
+create $1 0 -68
+wait 10
+create $1 0 -88
+wait 10
+create $1 0 -108
+
+#===============================================================================
+# Utility
+#===============================================================================
+
+define object fairy_blue
+:init:
+call fairy_init $1 $2 0
+:life:
+call $3
+:death:
+call fairy_dead
+
+define object fairy_red
+:init:
+call fairy_init $1 $2 24
+:life:
+call $3
+:death:
+call fairy_dead
+
+define spell fairy_init
+anim anims.fairy_anim $3
+hitbox 10
+power 4
+speed 3
+advance $1
+advance_side $2
+
+define spell fairy_dead
+drop power 1 80
+drop point 1 80

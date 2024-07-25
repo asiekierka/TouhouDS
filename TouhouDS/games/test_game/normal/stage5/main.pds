@@ -1,0 +1,285 @@
+define spell main
+bgm "bgm.mp3"
+wait 60
+create option_fairy
+wait 1000
+fork cannon_fodder 32 -16 256 128
+wait 90
+fork cannon_fodder 224 400 0 384
+wait 45
+fork cannon_fodder 32 -16 256 128
+wait 90
+fork cannon_fodder 224 400 0 384
+wait 120
+call spinners
+call aimed_barrage
+fork cannon_fodder 96 -16 224 286
+fork cannon_fodder 160 -16 286 224
+wait 300
+create_boss boss.endboss
+
+#===============================================================================
+# Cannon Fodder
+#===============================================================================
+
+define spell cannon_fodder
+create fodder_fairy $1 $2 $3 $4
+wait 12
+_loop 6
+
+define object fodder_fairy
+:init:
+call fairy_init 48
+pos $1 $2
+angle $3
+speed 2
+:life:
+wait 30
+call fodder_fairy_fire
+wait 30
+angle $4
+wait 30
+call fodder_fairy_fire
+:death:
+call fairy_dead
+
+define spell fodder_fairy_fire
+sfx "shoot.wav"
+fire fodder_fairy_shot ~-16:16;1
+
+define object fodder_fairy_shot
+:init:
+hitbox 3
+image tex_bullet 8 40 8 8
+speed 3
+turn $1
+:life:
+:death:
+
+#===============================================================================
+# Aimed Barrage
+#===============================================================================
+
+define spell aimed_barrage
+create barrage_fairy 32 32 -1
+wait 600
+create barrage_fairy 32 32 -1
+wait 400
+create barrage_fairy 192 32 0
+wait 300
+
+define object barrage_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 250
+pos $1 -16
+:life:
+move_to $1 $2 1
+speed 1.0
+angle_inc $3
+call barrage_fairy_sub1
+angle_inc 0
+wait 12
+call barrage_fairy_sub1
+die
+:death:
+call fairy_dead
+
+define spell barrage_fairy_sub1
+call barrage_fairy_sub2 4
+call barrage_fairy_sub2 5
+call barrage_fairy_sub2 6
+call barrage_fairy_sub2 7
+
+define spell barrage_fairy_sub2
+sfx "shoot.wav"
+_for 400 464 32
+fire barrage_shot $$ $1
+_for 48 112 32
+fire barrage_shot $$ $1
+wait 6
+_loop 5
+
+define object barrage_shot
+:init:
+hitbox 3
+image tex_bullet 0 40 8 8
+speed 3
+angle $1
+:life:
+turn_to player $2
+wait 10
+turn_to player 1
+:death:
+
+#===============================================================================
+# Spinner
+#===============================================================================
+
+define spell spinners
+create spinner -16 64 128 5
+wait 50
+create spinner 272 32 384 -5
+wait 100
+create spinner 64 -16 256 -4
+wait 100
+create spinner 192 -16 256 4
+wait 100
+
+define object spinner
+:init:
+image tex_bullet2 0 32 32 32
+anim spinner_anim
+power 99999
+hitbox 0
+pos $1 $2
+angle $3
+speed 5
+:life:
+wait 20
+angle_inc $4
+call spinner_fire
+speed 0
+anim spinner_anim2
+call spinner_fire2
+die
+:death:
+call fairy_dead
+
+define object spinner_shot
+:init:
+hitbox 3
+image tex_bullet 0 40 8 8
+speed 3
+turn $1
+:life:
+:death:
+
+define spell spinner_fire
+sfx "shoot.wav"
+_for -16 16 16
+fire spinner_shot $$
+wait 5
+_loop 10
+
+define object spinner_shot2
+:init:
+image tex_bullet 32 0 16 16
+hitbox 6
+draw_angle manual 0
+speed 2
+angle $1
+:life:
+:death:
+
+define spell spinner_fire2
+sfx "shoot.wav"
+_for 0 480 32
+fire spinner_shot2 $$
+wait 10
+sfx "shoot.wav"
+_for 16 496 32
+fire spinner_shot2 $$
+wait 10
+
+define animation spinner_anim
+draw_angle rotate 32
+wait 2
+_loop
+
+define animation spinner_anim2
+wait 2
+draw_angle rotate 32
+size 28 28
+wait 2
+draw_angle rotate 32
+size 24 24
+wait 2
+draw_angle rotate 32
+size 20 20
+wait 2
+draw_angle rotate 32
+size 16 16
+wait 2
+draw_angle rotate 32
+size 12 12
+wait 2
+draw_angle rotate 32
+size 8 8
+wait 2
+draw_angle rotate 32
+size 4 4
+wait 2
+draw_angle rotate 32
+size 0 0
+
+#===============================================================================
+# Option Fairy
+#===============================================================================
+
+define object option_fairy
+:init:
+call fairy_init 0
+power 200
+create option 64
+create option 192
+:life:
+move_to 128 64 1
+call fire_loop
+call fire_loop
+call fire_loop
+move_to 128 -32 0.5
+hide
+die
+:death:
+drop power_large 1
+drop power 4
+drop point_large 2
+drop point 4
+
+define object option
+:init:
+image tex_bullet2 0 32 32 32
+power 99999
+hitbox 0
+:life:
+move_to $1 64 1
+call fire_loop
+speed 1
+call fire_loop
+call fire_loop
+die
+:death:
+
+define spell fire_loop
+sfx "shoot.wav"
+_for 288 224 -32
+fire large_shot $$
+wait ~60:120;10
+_loop 5
+
+define object large_shot
+:init:
+image tex_bullet2 0 0 32 32
+speed 3
+angle $1
+hitbox 16
+size 64 64
+draw_angle manual 0
+:life:
+:death:
+
+#===============================================================================
+# Utility
+#===============================================================================
+
+define spell fairy_init
+anim anims.fairy_anim $1
+hitbox 10
+power 4
+speed 3
+
+define spell fairy_dead
+drop power 3 80
+drop point 2 80

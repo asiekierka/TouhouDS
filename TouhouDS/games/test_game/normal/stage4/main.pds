@@ -1,0 +1,195 @@
+define spell main
+bgm "bgm.mp3"
+bg_control 0 2
+wait 60
+fork bg_swizzle
+wait 60
+call card_fairy01
+wait 300
+call fairy_rain
+wait 120
+call card_fairy02
+wait 180
+call fairy_rain
+wait 180
+call card_fairy03
+wait 600
+#conv conv01 "lol, variables"
+create_boss boss.endboss
+
+#===============================================================================
+# Fairy Rain
+#===============================================================================
+
+define spell fairy_rain
+fork fairy_rain_helper
+_loop 6
+
+define spell fairy_rain_helper
+create rain_fairy ~8:248;8 ~-1:1;1
+wait ~10:30;1
+_loop 10
+
+define object rain_fairy
+:init:
+call fairy_init 48
+pos $1 -16
+angle_inc $2
+:life:
+speed_to 1 0.1
+wait 10
+angle_inc 0
+speed_to 3 0.1
+_loop 2
+:death:
+call fairy_dead
+
+#===============================================================================
+# Card Fairies
+#===============================================================================
+
+define spell card_fairy03
+create mega_card_fairy 128
+wait 60
+create mega_card_fairy 64
+create mega_card_fairy 192
+
+define object mega_card_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 150
+pos $1 -16
+speed_to 0.5 0.01
+:life:
+call mega_card_fairy_loop
+speed_to 1.0 0.1
+:death:
+drop power_large 1
+drop power 5
+drop point_large 5
+
+define spell mega_card_fairy_loop
+sfx "shoot.wav"
+fire card 10 -2
+fire card 10 -1
+fire card 10 0
+fire card 10 1
+fire card 10 2
+wait ~20:30;1
+sfx "shoot.wav"
+fire card 20 -2
+fire card 20 -1
+fire card 20 0
+fire card 20 1
+fire card 20 2
+wait ~20:30;1
+_loop 5
+
+define spell card_fairy02
+create card_fairy 96 -16 272
+create card_fairy 160 -16 240
+wait 30
+create card_fairy 112 -16 256
+create card_fairy 144 -16 256
+wait 10
+
+define spell card_fairy01
+create card_fairy -16 64 224
+create card_fairy 272 64 288
+wait 90
+create card_fairy -16 48 224
+create card_fairy 272 48 288
+wait 60
+create card_fairy -16 32 224
+create card_fairy 272 32 288
+wait 60
+create card_fairy 112 -16 256
+create card_fairy 144 -16 256
+
+define object card_fairy
+:init:
+call fairy_init 72
+pos $1 $2
+angle $3
+speed 0.5
+power 8
+speed_inc 0.005
+:life:
+sfx "shoot.wav"
+fire card 10 -2
+fire card 10 -1
+fire card 10 0
+fire card 10 1
+fire card 10 2
+wait ~20:30;1
+_loop 6
+:death:
+call fairy_dead
+
+define object card
+:init:
+call card_init 16
+:life:
+wait 20
+angle_inc $2
+wait $1
+angle_inc 0
+:death:
+
+#===============================================================================
+# Utility
+#===============================================================================
+
+define spell fairy_init
+anim anims.fairy_anim $1
+hitbox 10
+power 4
+speed 3
+
+define spell fairy_dead
+drop power 1 80
+drop point 1 80
+
+define spell card_init
+image tex_bullet 32 $1 8 8
+hitbox 3
+speed 1.5
+
+#===============================================================================
+# Conversation
+#===============================================================================
+
+define conversation conv01_reimu
+say 0 "Reimu" "This is a test conversation. The next line is a variable"
+conv_image 0 "reimu_smile"
+say 0 "Reimu" $1
+say 0 "Reimu" "That worked out pretty well (or did it?)"
+say 0 "Reimu" ":D"
+conv_image 1 "cirno_shocked"
+say 1 "Cirno" "D:"
+conv_clear 0
+say 1 "Cirno" "DD:"
+
+#===============================================================================
+# BG Control
+#===============================================================================
+define spell bg_swizzle
+bg_control 0.00 3
+wait 180
+bg_control 0.10 3
+wait 180
+bg_control 0.25 3
+wait 540
+bg_control 0.10 3
+wait 180
+bg_control 0.00 3
+wait 180
+bg_control -0.10 3
+wait 180
+bg_control -0.25 3
+wait 540
+bg_control -0.10 3
+wait 180
+_loop
+

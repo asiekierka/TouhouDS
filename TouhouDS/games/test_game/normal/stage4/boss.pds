@@ -1,0 +1,258 @@
+define boss endboss
+:init:
+chara_anim idle a_tewi_idle
+chara_anim tween_right a_tewi_tween_right
+chara_anim right a_tewi_right
+hitbox 25
+pos 128 -16
+:life:    
+bgm "tewi.mp3"
+boss_name "Tewi"
+boss_num_spellcards 3
+move_to 128 64 .5
+boss_spell "Carrot Cake" 1000 1800 boss01
+wait 60
+move_to 128 64 .5
+boss_spell "Sugar Rush" 900 1800 boss02
+wait 60
+move_to 128 64 .5
+boss_spell "Tweezer" 1000 1200 boss03
+:death:
+end_stage
+
+#===============================================================================
+#Animations
+#===============================================================================
+
+define animation a_tewi_idle
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 42 0 42 42
+wait 10
+image tex_boss 0 0 42 42
+wait 10
+image tex_boss 84 0 42 42
+wait 10
+
+define animation a_tewi_tween_right
+image tex_boss 0 42 42 42
+wait 10
+image tex_boss 42 42 42 42
+wait 10
+image tex_boss 84 42 42 42
+wait 10
+
+define animation a_tewi_right
+image tex_boss 84 42 42 42
+wait 10
+
+#===============================================================================
+#Spellcard 03
+#===============================================================================
+
+define spell boss03
+call boss03_column 224 288
+move_to ~64:192;32 ~32:96;32 1.5
+wait 10
+call boss03_column 248 264
+wait 10
+_loop
+
+define spell boss03_column
+fire column_shot 0.05 $2 -1
+fire column_shot 0.05 $1 1
+wait 10
+fire column_shot 0.075 $2 -1
+fire column_shot 0.075 $1 1
+wait 10
+fire column_shot 0.1 $2 -1
+fire column_shot 0.1 $1 1
+wait 10
+fire column_shot 0.125 $2 -1
+fire column_shot 0.125 $1 1
+wait 10
+fire column_shot 0.15 $2 -1
+fire column_shot 0.15 $1 1
+wait 10
+fire column_shot 0.175 $2 -1
+fire column_shot 0.175 $1 1
+wait 10
+fire column_shot 0.2 $2 -1
+fire column_shot 0.2 $1 1
+wait 10
+fire column_shot 0.225 $2 -1
+fire column_shot 0.225 $1 1
+wait 10
+fire column_shot 0.25 $2 -1
+fire column_shot 0.25 $1 1
+wait 10
+
+define object column_shot
+:init:
+call pink_init
+angle $2
+speed 5
+:life:
+speed_to 0 $1
+angle_inc $3
+speed_to 3.0 0.1
+:death:
+
+#===============================================================================
+#Spellcard 02
+#===============================================================================
+
+define spell boss02
+move_to ~64:192;32 128 1.5
+angle 0
+speed 1
+create boss02_fire_loop
+wait 10
+create boss02_fire_loop
+wait 10
+create boss02_fire_loop
+wait 10
+create boss02_fire_loop
+wait 10
+_loop
+
+define object boss02_fire_loop
+:init:
+power 9999
+hide
+angle 0
+speed 1
+:life:
+sfx "shoot.wav"
+fire boss02_sugar 264 -8
+fire boss02_sugar 240 8
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 272 -7
+fire boss02_sugar 232 7
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 280 -6
+fire boss02_sugar 224 6
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 288 -5
+fire boss02_sugar 216 5
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 296 -4
+fire boss02_sugar 208 4
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 304 -3
+fire boss02_sugar 200 3
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 312 -2
+fire boss02_sugar 192 2
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 320 -1
+fire boss02_sugar 184 1
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 328 0
+fire boss02_sugar 176 0
+wait 5
+sfx "shoot.wav"
+fire boss02_sugar 336 1
+fire boss02_sugar 172 -1
+wait 5
+die
+:death:
+
+define object boss02_sugar
+:init:
+call pink_init
+turn $1
+angle_inc $2
+:life:
+wait 20
+angle_inc 0
+:death:
+
+#===============================================================================
+#Spellcard 01
+#===============================================================================
+
+define spell boss01
+create carrot_emitter 16 0 256
+create carrot_emitter 32 0 256
+create carrot_emitter 48 0 256
+create carrot_emitter 64 0 256
+create carrot_emitter 80 0 256
+create carrot_emitter 96 0 256
+create carrot_emitter 112 0 256
+create carrot_emitter 128 0 256
+create carrot_emitter 144 0 256
+create carrot_emitter 160 0 256
+create carrot_emitter 176 0 256
+create carrot_emitter 192 0 256
+create carrot_emitter 208 0 256
+create carrot_emitter 224 0 256
+create carrot_emitter 240 0 256
+call boss01_loop
+
+define spell boss01_loop
+move_to ~32:224;96 ~32:64;32 1
+wait ~100:150;1
+sfx "shoot.wav"
+call boss01_blast
+_loop
+
+define spell boss01_blast
+fire boss01_blast_shot ~-8:8;1 ~3.0:4.0;0.1
+_loop 4
+
+define object boss01_blast_shot
+:init:
+call yellow_init
+angle 256
+turn $1
+speed $2
+speed 4
+:life:
+:death:
+
+define object carrot_emitter
+:init:
+power 9999
+pos $1 $2
+angle $3
+speed 0
+hide
+:life:
+wait ~50:120;10
+fire boss01_carrot
+_loop
+:death:
+
+define object boss01_carrot
+:init:
+call carrot_init
+:life:
+:death:
+
+#===============================================================================
+#Other stuff
+#===============================================================================
+
+define spell pink_init
+image tex_boss 112 112 16 16
+hitbox 4
+speed 4
+
+define spell yellow_init
+image tex_boss 112 112 16 16
+hitbox 4
+speed 4
+
+define spell carrot_init
+image tex_boss 107 91 21 21
+hitbox 4
+speed 2

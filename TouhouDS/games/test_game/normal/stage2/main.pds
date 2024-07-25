@@ -1,0 +1,312 @@
+
+define spell main
+bgm "bgm.mp3"
+wait 60
+create large_fairy 128 64
+wait 720
+call cross_wave
+wait 90
+call carambole01
+wait 90
+call carambole02
+wait 120
+call drive_by
+wait 180
+call star_fairies
+wait 840
+create_boss boss.endboss
+
+#===============================================================================
+#Wave Fairies
+#===============================================================================
+define spell star_fairies
+create star_fairy 64 64
+wait 120
+create star_fairy 192 64
+
+define object star_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 400
+pos 128 -16
+:life:
+move_to $1 $2 .5
+call star_fire_loop 15
+die
+:death:
+drop power_large 1
+drop point 10
+drop point_large 2
+
+define spell star_fire_loop
+_for 0 448 64
+fire star_fire $$
+wait $1
+_for 16 464 64
+fire star_fire $$
+wait $1
+_for 32 480 64
+fire star_fire $$
+wait $1
+_for 48 496 64
+fire star_fire $$
+wait $1
+_loop 10
+
+define object star_fire
+:init:
+image tex_bullet 0 16 8 8
+hitbox 4
+speed 3.5
+angle $1
+:life:
+:death:
+
+#===============================================================================
+#Drive-by
+#===============================================================================
+define spell drive_by
+fork driveby_left
+fork driveby_right
+
+define spell driveby_left
+create driveby_fairy_left
+wait 15
+_loop 8
+
+define spell driveby_right
+create driveby_fairy_right
+wait 15
+_loop 8
+
+define object driveby_fairy_left
+:init:
+call fairy_init 48
+pos 16 -12
+speed 2
+:life:
+wait ~60:120
+sfx "shoot.wav"
+fire driveby_fairy_shot 16 ~64:192
+_loop
+:death:
+call fairy_dead
+
+define object driveby_fairy_right
+:init:
+call fairy_init 48
+pos 240 -12
+speed 2
+:life:
+wait ~60:120
+sfx "shoot.wav"
+fire driveby_fairy_shot 40 ~320:448
+_loop
+:death:
+call fairy_dead
+
+define object driveby_fairy_shot
+:init:
+image tex_bullet 8 $1 8 8
+hitbox 4
+speed 3.5
+angle $2
+:life:
+:death:
+
+#===============================================================================
+#Carambole
+#===============================================================================
+define spell carambole02
+create caram_fairy02 -12 364   0  1
+wait 40
+create caram_fairy02 268 -12 256  1
+wait 40
+create caram_fairy02 268 364   0 -1
+wait 40
+create caram_fairy02 -12 -12 256 -1
+wait 40
+
+define object caram_fairy02
+:init:
+call fairy_init 72
+pos $1 $2
+speed 3.0
+angle $3
+:life:
+wait 10
+angle_inc $4
+wait 45
+sfx "shoot.wav"
+fire caram_fairy_shot ~-64:64
+angle_inc 0
+wait 10
+angle_inc $4
+wait 45
+sfx "shoot.wav"
+fire caram_fairy_shot ~-64:64
+angle_inc 0
+_loop
+:death:
+call fairy_dead
+
+define object caram_fairy_shot
+:init:
+image tex_bullet 8 24 8 8
+hitbox 4
+speed 6
+angle player
+:life:
+turn $1
+:death:
+
+define spell carambole01
+create caram_fairy01 -12 364   0  1
+wait 40
+create caram_fairy01 268 -12 256  1
+wait 40
+create caram_fairy01 268 364   0 -1
+wait 40
+create caram_fairy01 -12 -12 256 -1
+wait 40
+
+define object caram_fairy01
+:init:
+call fairy_init 72
+pos $1 $2
+speed 3.0
+angle $3
+:life:
+wait 10
+angle_inc $4
+wait 45
+angle_inc 0
+wait 10
+angle_inc $4
+wait 45
+angle_inc 0
+_loop
+:death:
+call fairy_dead
+
+#===============================================================================
+#Cross Wave
+#===============================================================================
+define spell cross_wave
+fork cw_left
+fork cw_right
+
+define spell cw_left
+create cw_fairy 16 256 192 90
+wait 15
+create cw_fairy 16 256 192 70
+wait 15
+create cw_fairy 16 256 192 50
+wait 15
+create cw_fairy 16 256 192 30
+wait 15
+create cw_fairy 16 256 192 10
+
+define spell cw_right
+create cw_fairy 240 256 320 90
+wait 15
+create cw_fairy 240 256 320 70
+wait 15
+create cw_fairy 240 256 320 50
+wait 15
+create cw_fairy 240 256 320 30
+wait 15
+create cw_fairy 240 256 320 10
+
+define object cw_fairy
+:init:
+call fairy_init 48
+pos $1 -12
+speed 2.0
+angle $2
+:life:
+wait $4
+turn_to $3 1
+:death:
+call fairy_dead
+
+#===============================================================================
+#Large Fairy
+#===============================================================================
+
+define object large_fairy
+:init:
+anim anims.large_fairy_anim
+hitbox 12
+power 400
+pos 128 -16
+:life:
+move_to $1 $2 .5
+call lf_fire_01
+die
+:death:
+drop power_large 2
+drop point_large 5
+
+define spell lf_fire_01
+_for ~0:14 511 28
+fire lf_shot01 $$
+wait 15
+_loop 40
+
+define object lf_shot01
+:init:
+image tex_bullet 16 0 16 16
+hitbox 6
+draw_angle manual 0
+speed 3
+angle $1
+:life:
+:death:
+
+#===============================================================================
+#Regular Fairies
+#===============================================================================
+
+define object fairy_blue
+:init:
+call fairy_init 0
+:life:
+call $1
+:death:
+call fairy_dead
+
+define object fairy_red
+:init:
+call fairy_init 24
+:life:
+call $1
+:death:
+call fairy_dead
+
+define spell fairy_init
+anim anims.fairy_anim $1
+hitbox 10
+power 4
+speed 3
+
+define spell fairy_dead
+drop power 1 80
+drop point 1 80
+
+#===============================================================================
+#Projectiles
+#===============================================================================
+
+define object blue_shot
+:init:
+image tex_bullet 8 24 8 8
+hitbox 4
+speed 3.5
+angle player
+turn $1
+:life:
+:death:
+
+#===============================================================================

@@ -1,0 +1,293 @@
+define boss endboss
+:init:
+image tex_boss 0 0 40 40
+hitbox 25
+pos 128 -16
+:life:
+bgm "flan.mp3"
+boss_name "Flandrisa"
+boss_num_spellcards 3
+move_to 128 64 .5
+boss_spell "Spinning Rainbow" 750 1200 boss_01
+wait 60
+move_to 128 64 1
+boss_spell "Playing in the Rain" 750 1800 boss_02
+wait 60
+move_to 128 64 1
+boss_spell "Flandere" 750 1800 boss_03
+:death:
+end_stage
+
+#===============================================================================
+#Spellcard 03
+#===============================================================================
+
+define spell boss_03
+move_to 128 16 1
+create boss_03_emitter
+create boss_03_emitter2
+call boss_03_loop
+
+define spell boss_03_loop
+wait 60
+_loop
+
+define object boss_03_emitter2
+:init:
+speed 0
+power 99999
+hide
+:life:
+create boss_03_emitter2_sub -8 ~192:384;16 128
+wait 40
+create boss_03_emitter2_sub 264 ~192:384;16 384
+wait 40
+_loop
+:death:
+
+define object boss_03_emitter2_sub
+:init:
+speed 0
+power 99999
+hide
+pos $1 $2
+:life:
+sfx "shoot.wav"
+fire boss_03_sideshot $3
+wait 10
+_loop 10
+:death:
+
+define object boss_03_sideshot
+:init:
+image tex_bullet 0 16 8 8
+hitbox 3
+speed 2
+angle $1
+:life:
+:death:
+
+define object boss_03_emitter
+:init:
+speed 0
+power 99999
+hide
+:life:
+call boss_03_emit_a
+move_to ~112:144;1 32 1
+wait 60
+call boss_03_emit_b
+move_to ~112:144;1 32 1
+wait 60
+_loop
+:death:
+
+define spell boss_03_emit_a
+fire boss_03_shot_a 64 344
+fire boss_03_shot_a 72 328
+fire boss_03_shot_a 80 312
+fire boss_03_shot_a 88 296
+fire boss_03_shot_a 64 280
+fire boss_03_shot_a 72 264
+fire boss_03_shot_a 80 248
+fire boss_03_shot_a 88 232
+fire boss_03_shot_a 64 216
+fire boss_03_shot_a 72 200
+fire boss_03_shot_a 80 184
+fire boss_03_shot_a 88 168
+wait 8
+_loop 40
+
+define spell boss_03_emit_b
+fire boss_03_shot_b 64 344
+fire boss_03_shot_b 72 328
+fire boss_03_shot_b 80 312
+fire boss_03_shot_b 88 296
+fire boss_03_shot_b 64 280
+fire boss_03_shot_b 72 264
+fire boss_03_shot_b 80 248
+fire boss_03_shot_b 88 232
+fire boss_03_shot_b 64 216
+fire boss_03_shot_b 72 200
+fire boss_03_shot_b 80 184
+fire boss_03_shot_b 88 168
+wait 8
+_loop 40
+
+define object boss_03_shot_a
+:init:
+image tex_boss $1 112 8 8
+hitbox 3
+speed 2
+angle $2
+turn -60
+:life:
+angle_inc 2
+wait 60
+angle_inc -2
+wait 60
+_loop
+:death:
+
+define object boss_03_shot_b
+:init:
+image tex_boss $1 112 8 8
+hitbox 3
+speed 2
+angle $2
+turn 60
+:life:
+angle_inc -2
+wait 60
+angle_inc 2
+wait 60
+_loop
+:death:
+
+#===============================================================================
+#Spellcard 02
+#===============================================================================
+
+define spell boss_02
+move_to ~96:192;32 ~32:64;32 1.5
+create boss_02_emitter 0 -16 128
+wait ~50:100;1
+call boss_02_fire 256
+wait 40
+call boss_02_fire 320
+wait 40
+call boss_02_fire 192
+wait 40
+wait ~100:200
+_loop
+
+define spell boss_02_fire
+sfx "shoot.wav"
+fire boss_02_shot 24 0
+fire boss_02_shot 16 -8
+fire boss_02_shot 16 8
+fire boss_02_shot 8 -16
+fire boss_02_shot 8 16
+fire boss_02_shot 0 -24
+fire boss_02_shot 0 24
+
+define object boss_02_shot
+:init:
+call star_sh_init ~0:112;16
+advance $1
+advance_side $2
+speed 3
+:life:
+turn_to player 1
+:death:
+
+define object boss_02_emitter
+:init:
+image tex_boss 0 96 16 16
+pos $1 $2
+angle $3
+speed 2
+hitbox 0
+power 99999
+#hide
+turn 16
+:life:
+call boss_02_emitter_sub
+wait 16
+turn 224
+call boss_02_emitter_sub
+wait 16
+turn -224
+_loop
+:death:
+
+define spell boss_02_emitter_sub
+wait 12
+fire boss_02_rain 0
+wait 12
+fire boss_02_rain 8
+wait 12
+fire boss_02_rain 16
+wait 12
+fire boss_02_rain 24
+wait 8
+fire boss_02_rain 32
+_loop 2
+
+define object boss_02_rain
+:init:
+call narrow_sh_init $1
+speed 1
+:life:
+turn_to 256 1
+speed_to 3 0.01
+:death:
+
+#===============================================================================
+#Spellcard 01
+#===============================================================================
+
+define spell boss_01
+move_to ~32:224;32 ~32:128;32 .75
+_for 32 480 64 
+create boss_01_emitter $$
+wait 240
+_loop
+
+define object boss_01_emitter
+:init:
+image tex_boss 0 96 16 16
+angle $1
+advance 32
+turn 128
+speed 1.5
+angle_inc 4
+hide
+:life:
+call boss_01_emitter_loop
+pos -1000 -1000
+:death:
+
+define spell boss_01_emitter_loop
+wait 6
+sfx "shoot.wav"
+fire boss_01_emitter_shot ~0:112;16
+_loop 40
+
+define object boss_01_emitter_shot
+:init:
+call star_sh_init $1
+:life:
+turn ~-4:4;1
+:death:
+
+#===============================================================================
+#Projectiles
+#===============================================================================
+
+define animation star_sh_anim
+draw_angle rotate 8
+_loop
+
+define spell star_sh_init
+image tex_boss $1 96 16 16
+anim star_sh_anim
+hitbox 6
+speed 3
+
+define object star_sh
+:init:
+call star_sh_init $1
+:life:
+:death:
+
+define spell narrow_sh_init
+image tex_boss $1 120 8 8
+hitbox 2
+speed 4
+
+define object narrow_sh
+:init:
+call narrow_sh_init $1
+:life:
+:death:
