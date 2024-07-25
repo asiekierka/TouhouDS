@@ -301,7 +301,7 @@ void Remote::CreateRemotePlayers(Game* game, Player** out, int offset,
 }
 
 void Remote::InitPacket(UDPPacket* packet, PacketType type, u8 playerId) {
-	memset(packet, 0, sizeof(packet));
+	memset(packet, 0, sizeof(UDPPacket));
 	packet->packetType = type;
 	packet->playerId  = playerId;
 	packet->packetNum = ++packetNums[playerId];

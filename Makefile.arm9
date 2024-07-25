@@ -90,7 +90,7 @@ ARCH		:= -marm -mcpu=arm946e-s+nofp
 
 SPECS		:= $(BLOCKSDS)/sys/crts/ds_arm9.specs
 
-WARNFLAGS	:= -Wall
+WARNFLAGS	:= -Wall -Wno-builtin-declaration-mismatch
 
 ifeq ($(SOURCES_CPP),)
 	LIBS	+= -lc

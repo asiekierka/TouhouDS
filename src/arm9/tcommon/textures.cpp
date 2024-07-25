@@ -350,9 +350,9 @@ Texture* TextureManager::AddTexture(u8 sizeX, u8 sizeY,
 void TextureManager::TogglePixelVRAM(bool on) {
 	static u32 oldMode;
 	if (!on) {
-		oldMode = vramSetMainBanks(VRAM_A_LCD, VRAM_B_LCD, VRAM_C_LCD, VRAM_D_LCD);
+		oldMode = vramSetPrimaryBanks(VRAM_A_LCD, VRAM_B_LCD, VRAM_C_LCD, VRAM_D_LCD);
 	} else {
-		vramRestoreMainBanks(oldMode);
+		vramRestorePrimaryBanks(oldMode);
 	}
 }
 void TextureManager::TogglePaletteVRAM(bool on) {
