@@ -1,5 +1,6 @@
 #include <nds.h>
 #include <fat.h>
+#include <filesystem.h>
 #include <unistd.h>
 #include <sys/dir.h>
 
@@ -83,12 +84,9 @@ void installFail() {
     }
 }
 
-void checkInstall() {
-	if (!fexists("font.ttf") || !fexists("mono.ttf")
-			|| !fexists("img/title.dta") || !fexists("img/title.pal"))
-	{
-        installFail();
-	}
+bool checkInstall() {
+	return fexists("font.ttf") && fexists("mono.ttf")
+			&& fexists("img/title.dta") && fexists("img/title.pal");
 }
 
 void scriptFail(int code) {
@@ -135,16 +133,17 @@ int main(int argc, char** argv) {
     }
 	
     //Init filesystem
-    if (!fatInitDefault()) {
-		        libfatFail();
-		        return 1;
-    } else {
-        chdir("/TouhouDS");
+    bool fatInitOK = fatInitDefault();
+    bool nitroInitOK = true;
+
+    chdir("/TouhouDS");
+    if (!checkInstall()) {
+        nitroInitOK = nitroFSInit(NULL);
+        chdir("nitro:/");
     }
 
-
-    //Check install
-    checkInstall();
+    if (!fatInitOK && !nitroInitOK) libfatFail();
+    if (!checkInstall()) installFail();
 
     //Init default fonts
     createDefaultFontCache("font.ttf");
