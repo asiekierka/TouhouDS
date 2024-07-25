@@ -137,7 +137,7 @@ void Repository::CompareWithInstall(const char* installFolder) {
 	}
 
 	IniFile iniFile;
-	char id[MAXPATHLEN];
+	char id[PATH_MAX];
 	for (s16 n = 0; n < fileList.GetFilesL(); n++) {
 		char* filename = fileList.NextFile();
         char* extpos = strrchr(filename, '.');

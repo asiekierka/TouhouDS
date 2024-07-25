@@ -107,7 +107,7 @@ bool Remote::StartClient(u32 ip, u16 port) {
 	tcpcon->Receive(string, 64);
 	string[63] = '\0';
 	if (strcmp(string, "OK") != 0) {
-		iprintf("ERROR: %s\n", string);
+		printf("ERROR: %s\n", string);
 		delete tcpcon;
 		tcpcon = NULL;
 		return false;
@@ -259,7 +259,7 @@ bool Remote::ReceiveUDP(UDPPacket* packet, int channel) {
 			bool initOK = true;
 			clientTCP[pid]->Send(&initOK, sizeof(bool));
 
-			iprintf("Adding player (%d) @ %08x:%d\n", pid, playerIPs[pid], playerPorts[pid]);
+			printf("Adding player (%d) @ %08x:%d\n", pid, playerIPs[pid], playerPorts[pid]);
 		}
 	}
 
@@ -385,7 +385,7 @@ void Remote::UpdatePreGame() {
 	//Receive
 	while (ReceiveUDP(&packet, UDP_SOCK_MAIN)) {
 		if (packet.packetType != PT_playerInit) {
-			//iprintf("Impossible packet type for this state: %d\n", packet.packetType);
+			//printf("Impossible packet type for this state: %d\n", packet.packetType);
 		}
 	}
 
@@ -394,7 +394,7 @@ void Remote::UpdatePreGame() {
 		if (oldPlayerIPs[n] != playerIPs[n]) changed = true;
 	}
 	if (changed) {
-		iprintf("%d :: %x:%d %x:%d\n", playerId, playerIPs[1], playerPorts[1], playerIPs[2], playerPorts[2]);
+		printf("%d :: %x:%d %x:%d\n", playerId, playerIPs[1], playerPorts[1], playerIPs[2], playerPorts[2]);
 	}
 
 	//Voice
@@ -419,7 +419,7 @@ void Remote::Update(Game* game, u32 frame) {
 			if (player) {
 				memcpy(&player->state, &packet.playerUpdate.playerState, sizeof(RemotePlayerState));
 				if (frame > packet.playerUpdate.gameFrame + MAX_LAG_FRAMES) {
-					iprintf("WAIT:%d\n", frame - packet.playerUpdate.gameFrame);
+					printf("WAIT:%d\n", frame - packet.playerUpdate.gameFrame);
 					swiWaitForVBlank();
 				}
 			}

@@ -1,6 +1,6 @@
 
 define spell main
-bgm "bgm.mp3"
+bgm "bgm.wv"
 wait 180
 call vertical_scatter -96
 wait 180

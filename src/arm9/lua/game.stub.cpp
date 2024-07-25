@@ -37,7 +37,7 @@ void game_destroyAll(int spriteType) {
 void game_setBGM(const char* filename) {
     GameInfo* gi = cur_game->GetSelectedGame();
     if (gi) {
-        char path[MAXPATHLEN];
+        char path[PATH_MAX];
         sprintf(path, "games/%s/bgm/%s", gi->GetId(), filename);
         if (!fexists(path)) {
             sprintf(path, "bgm/%s", filename);

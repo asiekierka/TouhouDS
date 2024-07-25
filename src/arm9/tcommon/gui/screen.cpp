@@ -177,7 +177,7 @@ void Screen::SetTexture(u16* texImg) {
 			(GL_TEXTURE_PARAM_ENUM)(TEXGEN_TEXCOORD|GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T),
 			textureImage, 256*256*sizeof(u16), NULL, 0);
 
-		//iprintf("%08x\n", texture);
+		//printf("%08x\n", texture);
 
 	}
 }

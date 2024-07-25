@@ -31,22 +31,14 @@
 //---- ASlib options ------------------------------------------
 // uncomment the defines below to activate the desired option
 
-// use the EFSlib to stream mp3 files instead of libfat
-//#define AS_USE_EFS
-
 // use expanded stereo panning separation in surround mode, but decrease volume
 //#define AS_USE_EXPANDED_SURROUND_STEREO
 
 //-----------------------------------------------------------
 
-// mp3 static defines
-#define MAX_NGRAN           2           // max granules
-#define MAX_NCHAN           2           // max channels
-#define MAX_NSAMP           576         // max samples per channel, per granule
-
 // buffer sizes, should fit any usage (feel free to adjust if needed)
-#define AS_AUDIOBUFFER_SIZE 24 * MAX_NCHAN * MAX_NGRAN * MAX_NSAMP
-#define AS_FILEBUFFER_SIZE  8 * 1024   // file buffer size
+#define AS_AUDIOBUFFER_SIZE 16 * 2 * 1024
+#define AS_FILEBUFFER_SIZE  16 * 1024   // file buffer size
 
 // file access functions
 #define MP3FILE                         FileHandle
@@ -175,7 +167,6 @@ typedef struct
 /// MP3 player info
 typedef struct
 {
-	u32 helixbuffer;
     s8  *mixbuffer;
     u32 buffersize;
     s32 rate;
@@ -212,7 +203,7 @@ extern IPC_SoundSystem* ipcSound;
 #define AS_SoundQuickPlay(name)     AS_SoundDefaultPlay((u8*)name, (u32)name##_size, 127, 64, false, 0)
 
 /// initialize the ASLib
-void AS_Init(u8 mode, u32 mp3BufferSize);
+void AS_Init(u8 mode);
 
 /// reserve a particular DS channel (so it won't be used for the sound pool)
 void AS_ReserveChannel(u8 channel);

@@ -4,6 +4,7 @@
 #include <nds.h>
 #include <fat.h>
 #include <unistd.h>
+#include <limits.h>
 #include <sys/dir.h>
 
 #define SFX_CACHE_LEN 128
@@ -18,8 +19,8 @@ struct SoundRecord {
 
 class SoundManager {
     private:
-        char   soundFolder[MAXPATHLEN];
-        char   bgmFilename[MAXPATHLEN];
+        char   soundFolder[PATH_MAX];
+        char   bgmFilename[PATH_MAX];
         u16    bgmCooldown;
 
         u8*    memoryBuffer;

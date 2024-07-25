@@ -74,21 +74,20 @@ void SoundManager::Init(const char* folder, u32 cachesize) {
     memoryBufferOffset = 0;
     bgmCooldown = 0;
 
-    struct stat st;
-    char path[MAXPATHLEN];
-    char filename[MAXPATHLEN];
+    struct dirent *st;
+    char path[PATH_MAX];
 
-    DIR_ITER* dir = diropen(soundFolder);
+    DIR* dir = opendir(soundFolder);
     if (dir) {
-        while (dirnext(dir, filename, &st) == 0) {
-            if ((st.st_mode & S_IFDIR) == 0) {
-                sprintf(path, "%s/%s", folder, filename);
+        while ((st = readdir(dir)) != NULL) {
+            if (st->d_type == DT_REG) {
+                sprintf(path, "%s/%s", folder, st->d_name);
 
                 char* f = strrchr(path, '/');
             	AddFile(path, f ? f+1 : path);
             }
         }
-        dirclose(dir);
+        closedir(dir);
     }
 
     systemMemoryBufferOffset = memoryBufferOffset;
@@ -161,7 +160,7 @@ bool SoundManager::GetEntry(const char* id, SoundRecord** rout, u8** data, int* 
 }
 
 int SoundManager::PlayUserSound(const char* folder, const char* filename, u32 cooldown) {
-	char path[MAXPATHLEN];
+	char path[PATH_MAX];
 	sprintf(path, "%s/%s", folder, filename);
 
 	SoundRecord* r = NULL;

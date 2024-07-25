@@ -54,7 +54,7 @@ void Conversation::Image(u8 slot, const char* file) {
 
 	bool imageOK = false;
 	if (file) {
-		char path[MAXPATHLEN];
+		char path[PATH_MAX];
 		sprintf(path, "games/%s/img/%s", game->GetSelectedGame()->GetId(), file);
 		imageOK = loadImage(path, images[slot], NULL, 112, 112, GL_RGBA);
 		if (imageOK && slot == 1) {

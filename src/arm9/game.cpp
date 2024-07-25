@@ -1,3 +1,4 @@
+#include <ctime>
 #include "game.h"
 
 #include "../common/fifo.h"
@@ -405,7 +406,7 @@ void Game::VideoInit() {
     swiWaitForVBlank();
 
     consoleClear();
-    iprintf("\n"); //Move console down so it doesn't print under the performance info
+    printf("\n"); //Move console down so it doesn't print under the performance info
 
 	glMaterialf(GL_AMBIENT,  RGB15( 0,  0,  0));
 	glMaterialf(GL_DIFFUSE,  RGB15(31, 31, 31));
@@ -525,8 +526,8 @@ void Game::UpdateSprites(bool drawOnly) {
     }
 
 #ifdef PROFILE
-    iprintf("\x1b[s\x1b[0;12H%04dKB mem\x1b[u", HEAP_SIZE>>10);
-	iprintf("\x1b[s\x1b[0;23H%04d shot\x1b[u", numSprites);
+    printf("\x1b[s\x1b[0;12H%04dKB mem\x1b[u", HEAP_SIZE>>10);
+	printf("\x1b[s\x1b[0;23H%04d shot\x1b[u", numSprites);
 #endif
 
 }
@@ -676,7 +677,7 @@ void Game::RemoveSprite(Sprite* s) {
 	//Add to garbage if sprite is not a Player
     if (s->type != SPRITE_player) {
     	if (removeListIndex >= REMOVE_LIST_SIZE) {
-    		iprintf("Remove list overflow: %d\n", removeListIndex);
+    		printf("Remove list overflow: %d\n", removeListIndex);
     		waitForAnyKey();
     	}
 
@@ -817,20 +818,20 @@ Texture* Game::LoadTexture(const char* folder, const char* textureId,
 	strncpy(id, textureId, format - textureId);
 	id[format - textureId - 1] = '\0';
 
-	char dtaPath[MAXPATHLEN];
-	char palPath[MAXPATHLEN];
+	char dtaPath[PATH_MAX];
+	char palPath[PATH_MAX];
 	sprintf(dtaPath, "%s/%s.dta", folder, id);
 	sprintf(palPath, "%s/%s.pal", folder, id);
 
 	return loadTexture(&texmgr, format, dtaPath, palPath, param);
 }
 void Game::SetTexPlayer(const char* playerId, const char* textureId) {
-    char folder[MAXPATHLEN];
+    char folder[PATH_MAX];
     sprintf(folder, "chara/%s", playerId);
     textures[TEX_player] = LoadTexture(folder, textureId);
 }
 void Game::SetTexBomb(const char* bombId, const char* textureId, bool isPrimary) {
-    char folder[MAXPATHLEN];
+    char folder[PATH_MAX];
     sprintf(folder, "bomb/%s", bombId);
 
     Texture** tex = (isPrimary ? &texBomb1 : &texBomb2);
@@ -1075,7 +1076,7 @@ void Game::Run() {
 			if ((frames & 15) == 0) {
 				int frameTime = sum / frames;
 				maxFrameTime = MAX(maxFrameTime, frameTime);
-				iprintf("\x1b[s\x1b[0;0H%03d:%03d spd\x1b[u", MIN(999, frameTime),
+				printf("\x1b[s\x1b[0;0H%03d:%03d spd\x1b[u", MIN(999, frameTime),
 						MIN(999, maxFrameTime));
 				sum = 0;
 				frames = 0;
@@ -1083,7 +1084,7 @@ void Game::Run() {
 			}
 
 			if (keysDown() & KEY_SELECT) {
-				iprintf("\x1b[s\x1b[0;0Hdumping perf. log\x1b[u");
+				printf("\x1b[s\x1b[0;0Hdumping perf. log\x1b[u");
 				FILE* file = fopen("perflog.txt", "w");
 				if (file) {
 					for (u32 n = 0; n < perfLog.size(); n++) {
@@ -1092,7 +1093,7 @@ void Game::Run() {
 					perfLog.clear();
 					fclose(file);
 				}
-				iprintf("\x1b[s\x1b[0;0H                 \x1b[u");
+				printf("\x1b[s\x1b[0;0H                 \x1b[u");
 			}
         }
 #endif

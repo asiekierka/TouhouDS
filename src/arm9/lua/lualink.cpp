@@ -136,7 +136,7 @@ int LuaObjectLink::PushMethod(const char* methodName) {
 	lua_rawgeti(L, LUA_OBJREF_TABLE, objectRef);
 	lua_getfield(L, -1, methodName);
 
-	//iprintf("%d %d (%d) %s\n", oldtop, lua_gettop(L), objectRef, methodName);
+	//printf("%d %d (%d) %s\n", oldtop, lua_gettop(L), objectRef, methodName);
 
 	if (!lua_isfunction(L, -1)) {
 		lua_pop(L, 2);

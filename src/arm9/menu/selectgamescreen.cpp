@@ -182,7 +182,7 @@ void SelectGameScreen::OnSelectedGameChanged() {
 	if (gi) {
 	    u16* pixels = new u16[256 * 192];
 	    u8* alpha = new u8[256 * 192];
-	    char path[MAXPATHLEN];
+	    char path[PATH_MAX];
 	    sprintf(path, "games/%s/%s", gi->GetId(), gi->GetBanner());
 		if (!loadImage(path, pixels, alpha, 256, 192)) {
 			loadImage("img/default_game_banner", pixels, alpha, 256, 192, GL_RGB8_A5);

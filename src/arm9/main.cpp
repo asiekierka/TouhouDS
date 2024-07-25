@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <sys/dir.h>
 
-#include "efs_lib.h"
 #include "../common/fifo.h"
 
 #include "thcommon.h"
@@ -58,7 +57,7 @@ void libfatFail() {
     " the root folder of the card.   "
     "                                "
     "--------------------------------";
-    iprintf(warning);
+    printf(warning);
 
     while (true) {
         swiWaitForVBlank();
@@ -77,7 +76,7 @@ void installFail() {
     " is stored in /TouhouDS/        "
     "                                "
     "--------------------------------";
-    iprintf(warning);
+    printf(warning);
 
     while (true) {
         swiWaitForVBlank();
@@ -137,14 +136,8 @@ int main(int argc, char** argv) {
 	
     //Init filesystem
     if (!fatInitDefault()) {
-    	#ifdef EFS
-			if (!EFS_Init(EFS_AND_FAT|EFS_DEFAULT_DEVICE, NULL)) {
-		#endif
 		        libfatFail();
 		        return 1;
-		#ifdef EFS
-			}
-		#endif
     } else {
         chdir("/TouhouDS");
     }
@@ -158,7 +151,7 @@ int main(int argc, char** argv) {
     defaultFontCache->AddFont("mono.ttf");
 
     //Init ASLib
-	AS_Init(AS_MODE_MP3, 32*1024);
+    AS_Init(AS_MODE_MP3);
     AS_SetDefaultSettings(AS_ADPCM, 22050, 0);
     soundEnable();
 

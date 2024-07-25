@@ -20,7 +20,7 @@ void CharaButtonGrid::LoadIcons() {
 	if (icons) delete[] icons;
 	icons = new u16[iconSize * charInfoL];
 
-	char path[MAXPATHLEN];
+	char path[PATH_MAX];
 	for (int n = 0; n < charInfoL; n++) {
 		sprintf(path, "chara/%s/icon", charInfo[n].GetId());
 
@@ -265,10 +265,10 @@ void SelectCharacterScreen::SetSelectedCharacter(int c) {
     u16* selectedCharI = new u16[256*192];
     u8* selectedCharAlpha = new u8[256*192];
 
-    char cachedPath[MAXPATHLEN];
+    char cachedPath[PATH_MAX];
     sprintf(cachedPath, "cache/chara/portrait/%s", charInfo[c].GetId());
     if (!loadCached(cachedPath, charInfo[c].GetVersion(), selectedCharI, selectedCharAlpha)) {
-        char path[MAXPATHLEN];
+        char path[PATH_MAX];
 		sprintf(path, "chara/%s/%s", charInfo[c].GetId(), charInfo[c].GetPortrait());
 		if (strrchr(path, '.')) {
 			//Remove file-ext

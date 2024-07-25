@@ -19,7 +19,7 @@ BombInfo* initBombInfo() {
     bombInfo = new BombInfo[bombInfoL];
 
     int t = 0;
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     char* filename;
     while ((filename = fileList.NextFile()) != NULL) {
         sprintf(path, "bomb/%s", filename);

@@ -7,7 +7,7 @@ chara_anim idle a_chen_idle
 chara_anim tween_right a_chen_tween_right
 chara_anim right a_chen_right
 :life:    
-bgm "chen.mp3"
+bgm "chen.wv"
 boss_name "Chen"
 boss_num_spellcards 2
 move_to 128 64 .5

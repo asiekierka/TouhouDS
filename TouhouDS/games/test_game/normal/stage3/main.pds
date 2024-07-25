@@ -1,5 +1,5 @@
 define spell main
-bgm "bgm.mp3"
+bgm "bgm.wv"
 wait 60
 call platoon
 wait 180

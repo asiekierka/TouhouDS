@@ -6,7 +6,7 @@ chara_anim right a_tewi_right
 hitbox 25
 pos 128 -16
 :life:    
-bgm "tewi.mp3"
+bgm "tewi.wv"
 boss_name "Tewi"
 boss_num_spellcards 3
 move_to 128 64 .5

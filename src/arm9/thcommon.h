@@ -93,7 +93,7 @@ typedef enum {
 	VK_fire = 16,
 	VK_focus = 32,
 	VK_bomb = 64
-} Keys;
+} THKeys;
 
 class UV {
 	public:

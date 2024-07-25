@@ -1,94 +1,110 @@
-export SHORTNAME 		:= Touhou DS
-export LONGNAME 		:= Touhou DS
-export VERSION	 		:= 0.9
-ICON 		:= -b logo.bmp
-EFS			:= $(CURDIR)/tools/efs/efs
+# SPDX-License-Identifier: CC0-1.0
+#
+# SPDX-FileContributor: Antonio Niño Díaz, 2023
 
-#------------------------------------------------------------------------------
-.SUFFIXES:
-#------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITARM)),)
-$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM)
+BLOCKSDS	?= /opt/blocksds/core
+BLOCKSDSEXT	?= /opt/blocksds/external
+
+# User config
+# ===========
+
+NAME		:= TouhouDS
+
+GAME_TITLE	:= Touhou DS
+GAME_SUBTITLE	:= by Spuzkaizer
+GAME_AUTHOR	:= 0.9.1-pre
+GAME_ICON	:= logo.bmp
+
+# DLDI and internal SD slot of DSi
+# --------------------------------
+
+# Root folder of the SD image
+SDROOT		:= sdroot
+# Name of the generated image it "DSi-1.sd" for no$gba in DSi mode
+SDIMAGE		:= image.bin
+
+# Source code paths
+# -----------------
+
+NITROFATDIR	:=
+
+# Tools
+# -----
+
+MAKE		:= make
+RM		:= rm -rf
+
+# Verbose flag
+# ------------
+
+ifeq ($(VERBOSE),1)
+V		:=
+else
+V		:= @
 endif
 
-include $(DEVKITARM)/ds_rules
+# Directories
+# -----------
 
-export TARGET := $(shell basename $(CURDIR))
-export TOPDIR := $(CURDIR)
+ARM9DIR		:= arm9
+ARM7DIR		:= arm7
 
-.PHONY: $(TARGET).arm7 $(TARGET).arm9
+# Build artfacts
+# --------------
 
-#------------------------------------------------------------------------------
-# main targets
-#------------------------------------------------------------------------------
-all: $(TARGET).nds $(TARGET)-EFS.nds
+NITROFAT_IMG	:= build/nitrofat.bin
+ROM		:= $(NAME).nds
 
-#------------------------------------------------------------------------------
+# Targets
+# -------
 
-dist-shared:
-	@rm -rf dist
-	@mkdir dist
-	@mkdir dist/TouhouDS
-	cp license.txt dist/TouhouDS
-	cp readme.txt dist/TouhouDS
-	cp changelog.txt dist/TouhouDS
-	cp -r manual/ dist/TouhouDS
-	cp -r tools/ dist/TouhouDS
+.PHONY: all clean arm9 arm7 dldipatch sdimage
 
-dist: $(TARGET).nds
-	$(MAKE) dist-shared
-	cp $(TARGET).nds dist/TouhouDS
-	cp -r TouhouDS/* dist/TouhouDS
-	@find dist/TouhouDS/ -type d -name ".svn" | xargs rm -r
-	@rm -f $(TARGET)-$(VERSION).7z
-	cd dist && 7za a ../$(TARGET)-$(VERSION).7z TouhouDS
+all: $(ROM)
 
-dist-src:
-	$(MAKE) dist-shared
-	cp run.bat dist/TouhouDS
-	cp convert-graphics.bat dist/TouhouDS
-	cp exception-to-src.bat dist/TouhouDS
-	cp generate-lua-bindings.bat dist/TouhouDS
-	cp Makefile dist/TouhouDS
-	cp logo.bmp dist/TouhouDS
-	cp -r src/ dist/TouhouDS
-	cp -r src-art/ dist/TouhouDS
-	@mkdir dist/TouhouDS/TouhouDS
-	cp -r TouhouDS/* dist/TouhouDS/TouhouDS
-	@find dist/TouhouDS/src/ -type d -name "build" | xargs rm -r
-	@find dist/TouhouDS/     -type d -name ".svn"  | xargs rm -r
-	@rm -f $(TARGET)-$(VERSION)-src.7z
-	cd dist && 7za a ../$(TARGET)-$(VERSION)-src.7z TouhouDS
-
-$(TARGET)-EFS.nds: $(TARGET).nds
-	@rm -rf dist
-	@mkdir dist
-	cp -r TouhouDS/* dist/
-	cp $(TARGET).nds dist/
-	@find dist/ -type d -name ".svn" | xargs rm -r
-	@ndstool -c $(TARGET)-EFS.nds -7 $(TARGET).arm7 -9 $(TARGET).arm9 $(ICON) "$(SHORTNAME);$(LONGNAME);$(VERSION)" -d $(CURDIR)/dist
-	@$(EFS) $(notdir $@)
-
-$(TARGET).nds: $(TARGET).arm7 $(TARGET).arm9
-	@ndstool -c $(TARGET).nds -7 $(TARGET).arm7 -9 $(TARGET).arm9 $(ICON) "$(SHORTNAME);$(LONGNAME);$(VERSION)"
-
-#------------------------------------------------------------------------------
-$(TARGET).arm7	: arm7/$(TARGET).elf
-$(TARGET).arm9	: arm9/$(TARGET).elf
-
-#------------------------------------------------------------------------------
-arm7/$(TARGET).elf:
-	$(MAKE) -C src/arm7
-	
-#------------------------------------------------------------------------------
-arm9/$(TARGET).elf:
-	$(MAKE) -C src/arm9
-
-#------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------
 clean:
-	$(MAKE) -C src/arm9 clean
-	$(MAKE) -C src/arm7 clean
-	rm -f $(TARGET).nds $(TARGET)-EFS.nds $(TARGET).arm7 $(TARGET).arm9 $(TARGET)-$(VERSION).7z $(TARGET)-$(VERSION)-src.7z
-	rm -rf dist
+	@echo "  CLEAN"
+	$(V)$(MAKE) -f Makefile.arm9 clean --no-print-directory
+	$(V)$(MAKE) -f Makefile.arm7 clean --no-print-directory
+	$(V)$(RM) $(ROM) build $(SDIMAGE)
+
+arm9:
+	$(V)+$(MAKE) -f Makefile.arm9 --no-print-directory
+
+arm7:
+	$(V)+$(MAKE) -f Makefile.arm7 --no-print-directory
+
+ifneq ($(strip $(NITROFATDIR)),)
+# Additional arguments for ndstool
+NDSTOOL_FAT	:= -F $(NITROFAT_IMG)
+
+$(NITROFAT_IMG): $(NITROFATDIR)
+	@echo "  MKFATIMG $@ $(NITROFATDIR)"
+	$(V)$(BLOCKSDS)/tools/mkfatimg/mkfatimg -t $(NITROFATDIR) $@ 0
+
+# Make the NDS ROM depend on the filesystem image only if it is needed
+$(ROM): $(NITROFAT_IMG)
+endif
+
+# Combine the title strings
+ifeq ($(strip $(GAME_SUBTITLE)),)
+    GAME_FULL_TITLE := $(GAME_TITLE);$(GAME_AUTHOR)
+else
+    GAME_FULL_TITLE := $(GAME_TITLE);$(GAME_SUBTITLE);$(GAME_AUTHOR)
+endif
+
+$(ROM): arm9 arm7
+	@echo "  NDSTOOL $@"
+	$(V)$(BLOCKSDS)/tools/ndstool/ndstool -c $@ \
+		-7 build/arm7.elf -9 build/arm9.elf \
+		-b $(GAME_ICON) "$(GAME_FULL_TITLE)" \
+		$(NDSTOOL_FAT)
+
+sdimage:
+	@echo "  MKFATIMG $(SDIMAGE) $(SDROOT)"
+	$(V)$(BLOCKSDS)/tools/mkfatimg/mkfatimg -t $(SDROOT) $(SDIMAGE) 0
+
+dldipatch: $(ROM)
+	@echo "  DLDITOOL $(ROM)"
+	$(V)$(BLOCKSDS)/tools/dlditool/dlditool \
+		$(BLOCKSDS)/tools/dldi/r4tfv2.dldi $(ROM)

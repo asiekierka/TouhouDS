@@ -192,12 +192,12 @@ void MultiPlayerScreen::OnSelectedGameChanged(GameInfo* gi) {
 bool MultiPlayerScreen::StartRemote() {
 
 #ifndef ENABLE_WIFI
-	iprintf("Error: program compiled without Wifi support\n");
+	printf("Error: program compiled without Wifi support\n");
 	waitForAnyKey();
 	return false;
 #endif
 
-	iprintf("Trying to connect via Wifi.\nPress B to abort.\n");
+	printf("Trying to connect via Wifi.\nPress B to abort.\n");
 
 	startWifi(&wifiConfig);
 	u32 assocStatus;
@@ -208,29 +208,29 @@ bool MultiPlayerScreen::StartRemote() {
 	} while (assocStatus != ASSOCSTATUS_ASSOCIATED && !(keysDown() & KEY_B));
 
 	if (keysDown() & KEY_B) {
-		iprintf("Aborted.\n");
+		printf("Aborted.\n");
 		stopWifi();
 		return false;
 	}
 
-	iprintf("Connection Established.\n");
-	iprintf("================================");
+	printf("Connection Established.\n");
+	printf("================================");
 
 	if (modeSpinner->GetChoiceValue()->value == 1) {
-		iprintf("Starting server...\n");
+		printf("Starting server...\n");
 		remote.StartServer();
 	} else {
-		iprintf("Connecting to server...\n");
+		printf("Connecting to server...\n");
 		remote.StartClient(stringToIP(ipField->GetText()));
 	}
 
-	iprintf("Waiting for other players.\n");
+	printf("Waiting for other players.\n");
 	do {
 		remote.UpdatePreGame();
 		scanKeys();
 	} while(!(keysHeld() & KEY_X));
 
-	iprintf("Starting Game...\n");
+	printf("Starting Game...\n");
 	return true;
 }
 

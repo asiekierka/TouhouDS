@@ -40,7 +40,7 @@ Level::Level(Game* g, u32 score, const char* f) {
 
     //Parse ini
     IniFile iniFile;
-    char iniPath[MAXPATHLEN];
+    char iniPath[PATH_MAX];
     sprintf(iniPath, "%s.ini", folder);
     if (iniFile.Load(iniPath)) {
         IniRecord* r;
@@ -223,7 +223,7 @@ void Level::Update() {
 }
 
 void Level::UnlockRoute(const char* routeId) {
-    char target[MAXPATHLEN];
+    char target[PATH_MAX];
 
     int index = strlen(folder)-1;
     for (int n = 0; n < 2; n++) {

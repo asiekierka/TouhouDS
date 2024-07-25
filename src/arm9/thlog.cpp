@@ -79,7 +79,8 @@ const vector<LogEntry> LogBuffer::GetEntries() {
 
 void pngErr(png_structp png_ptr, png_const_charp error_msg) {
 	log(EL_error, "libpng", "libpng_err: %s", error_msg);
-	longjmp(png_ptr->jmpbuf, 1);
+	// TODO: Is this necessary after upgrading from libpng 1.2 to 1.6?
+	// longjmp(png_ptr->jmpbuf, 1);
 }
 void pngWarn(png_structp png_ptr, png_const_charp warning_msg) {
 	log(EL_warning, "libpng", "libpng_warn: %s", warning_msg);

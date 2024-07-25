@@ -66,7 +66,7 @@ void MainScreen::Activate() {
 	SetTexture(menu->titleTextureI);
 	SetBackgroundImage(menu->titleI+256*192);
 
-	menu->soundManager.SetBGM("bgm/menu_bgm.mp3");
+	menu->soundManager.SetBGM("bgm/menu_bgm.wv");
 }
 
 void MainScreen::Deactivate() {

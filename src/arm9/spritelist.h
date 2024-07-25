@@ -26,7 +26,7 @@ inline
 Sprite* SL_Next(SpriteList& list, u32& index) {
 	#ifdef DEBUG
 		if (index >= list.size) {
-			iprintf("NEXT OUT OF BOUNDS\n");
+			printf("NEXT OUT OF BOUNDS\n");
 			waitForAnyKey();
 			return NULL;
 		}

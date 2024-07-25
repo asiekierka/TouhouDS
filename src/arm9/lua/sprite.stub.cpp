@@ -302,7 +302,7 @@ void sprite_die(Sprite* obj) {
 }
 
 void sprite_drop(Sprite* obj, int itemType, int amount) {
-	//iprintf("%d %d\n", itemType, amount);
+	//printf("%d %d\n", itemType, amount);
 
 	ItemType type = (ItemType)itemType;
 

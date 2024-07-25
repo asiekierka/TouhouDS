@@ -1,5 +1,5 @@
 define spell main
-bgm "bgm.mp3"
+bgm "bgm.wv"
 bg_control 0 2
 wait 60
 fork bg_swizzle

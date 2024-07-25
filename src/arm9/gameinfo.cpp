@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "gameinfo.h"
 
 #include "thcommon.h"
@@ -18,7 +20,7 @@ GameInfo** initGameInfo() {
     gameInfo = new GameInfo*[gameInfoL];
 
     int t = 0;
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     char* filename;
     while ((filename = fileList.NextFile()) != NULL) {
         sprintf(path, "games/%s", filename);
@@ -62,7 +64,7 @@ GameInfo** initGameInfo() {
 }
 
 void initRoutes(GameInfo* gi) {
-    char folder[MAXPATHLEN];
+    char folder[PATH_MAX];
     sprintf(folder, "games/%s", gi->GetId());
 
     IniFile* iniFile = new IniFile();
@@ -71,7 +73,7 @@ void initRoutes(GameInfo* gi) {
     gi->SetNumRoutes(routesL);
 
     int t = 0;
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     char* filename;
     while ((filename = fileList->NextFile()) != NULL) {
         sprintf(path, "%s/%s", folder, filename);
@@ -195,7 +197,7 @@ void insertScoreAndSave(char* path, ScoreRecord* records, u16 recordsL, ScoreRec
 int GameInfo::GetScoreRecords(ScoreRecord* entries, const char* routeId, const char* charaId) {
     char versionStr[32];
     GetVersionString(versionStr);
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     sprintf(path, "score/%s-%s.dat", GetId(), versionStr);
 
     FileHandle* fh = fhOpen(path);
@@ -256,7 +258,7 @@ void GameInfo::SaveScore(const char* routeId, const char* charaId, u8 stage, u32
 
     char versionStr[32];
     GetVersionString(versionStr);
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     sprintf(path, "score/%s-%s.dat", GetId(), versionStr);
 
     //Create new entry object

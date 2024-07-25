@@ -56,7 +56,7 @@ int Runtime::Compile(vector<const char*>& scriptFolders) {
 
 	    const char* filename;
 	    while ((filename = fileList->NextFile()) != NULL) {
-	    	char path[MAXPATHLEN];
+	    	char path[PATH_MAX];
 	        sprintf(path, "%s/%s", scriptFolders[n], filename);
 	        scriptFiles.push_back(string(path));
 

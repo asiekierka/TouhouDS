@@ -393,7 +393,7 @@ function laserDisturbance()
 end
 
 function main()
-	Game.setBGM("bgm.mp3")
+	Game.setBGM("bgm.wv")
 
 	local ghost = CircleGhost.new{ainc=0.01}
 	ghost:setPos(128, -32)
@@ -534,7 +534,7 @@ function main()
 
 	Game.setBGM("")
 	yield(240)
-	Game.setBGM("yuyuko.mp3")
+	Game.setBGM("yuyuko.wv")
 	yield(240)
 	
 	local boss = Yuyucow.new()

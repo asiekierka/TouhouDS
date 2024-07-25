@@ -23,7 +23,7 @@ void SL_Append(SpriteList& list, Sprite* s) {
 	if (list.size >= list.maxSize) {
 		SL_Compact(list);
 		if (list.size >= list.maxSize) {
-			iprintf("Moving past the end of a spritelist (size=%d, maxsize=%d) Infinite loop?\n", list.size, list.maxSize);
+			printf("Moving past the end of a spritelist (size=%d, maxsize=%d) Infinite loop?\n", list.size, list.maxSize);
 			waitForAnyKey();
 		}
 	}

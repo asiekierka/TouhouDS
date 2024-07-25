@@ -81,7 +81,7 @@ XmlFile::~XmlFile() {
 XmlNode* XmlFile::Open(const char* filename) {
 	FileHandle* fh = fhOpen(filename);
 	if (!fh) {
-		return false;
+		return nullptr;
 	}
 
 	Close();
@@ -129,7 +129,7 @@ XmlNode* XmlFile::Parse() {
 	XmlNode* root = NULL;
 
 	//consoleDemoInit();
-	//iprintf("Parsing...\n");
+	//printf("Parsing...\n");
 	//waitForAnyKey();
 
 	vector<XmlNode*> stack;
@@ -161,7 +161,7 @@ XmlNode* XmlFile::Parse() {
 				TOP->text = name;
 				inElem = true;
 
-				//iprintf("%d %c%c%c%c\n", stack.size(), name[0], name[1], name[2], name[3]);
+				//printf("%d %c%c%c%c\n", stack.size(), name[0], name[1], name[2], name[3]);
 				//waitForAnyKey();
 			} else {
 				char* txt = b+n;

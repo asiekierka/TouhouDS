@@ -142,7 +142,7 @@ void WifiScreen::OnButtonPressed(Button* button) {
 	    }
 
 		startWifi(&wifiConfig);
-	    iprintf("Trying to connect via Wifi.\nPress B to abort.\n");
+	    printf("Trying to connect via Wifi.\nPress B to abort.\n");
 	    u32 assocStatus;
 	    do {
 	        swiWaitForVBlank();
@@ -151,21 +151,21 @@ void WifiScreen::OnButtonPressed(Button* button) {
 	    } while (assocStatus != ASSOCSTATUS_ASSOCIATED && !(keysDown() & KEY_B));
 
 	    if (keysDown() & KEY_B) {
-	    	iprintf("Aborted.\n");
+	    	printf("Aborted.\n");
 	    } else {
-			iprintf("Connection Established.\n");
-			iprintf("Trying to connect to www.google.com\n");
+			printf("Connection Established.\n");
+			printf("Trying to connect to www.google.com\n");
 
 			TCPConnection con;
 		    if (con.Connect("www.google.com") < 0) {
-				iprintf("Website unreachable...\n");
+				printf("Website unreachable...\n");
 		    } else {
-				iprintf("Connected to www.google.com successfully...\n");
+				printf("Connected to www.google.com successfully...\n");
 		    }
 	    }
 
 	    stopWifi();
-		iprintf("Press any key to continue...");
+		printf("Press any key to continue...");
 		waitForAnyKey();
 		consoleClear();
 

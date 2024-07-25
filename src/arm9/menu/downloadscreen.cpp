@@ -1,5 +1,6 @@
 #include "downloadscreen.h"
 
+#include <ctime>
 #include <vector>
 #include <string>
 #include "wifiscreen.h"
@@ -34,7 +35,7 @@ void DownloadScrollPane::Install(const char* path) {
 
 #ifdef ENABLE_WIFI
 	startWifi(&wifiConfig);
-    iprintf("Trying to connect via Wifi.\nPress B to abort.\n");
+    printf("Trying to connect via Wifi.\nPress B to abort.\n");
     u32 assocStatus;
     do {
         swiWaitForVBlank();
@@ -43,38 +44,38 @@ void DownloadScrollPane::Install(const char* path) {
     } while (assocStatus != ASSOCSTATUS_ASSOCIATED && !(keysDown() & KEY_B));
 
     if (keysDown() & KEY_B) {
-    	iprintf("Aborted.\n");
+    	printf("Aborted.\n");
     } else {
-		iprintf("Connection Established.\n");
-		iprintf("================================");
+		printf("Connection Established.\n");
+		printf("================================");
 
 		for (u32 n = 0; n < markedForInstall.size(); n++) {
 			const char* id = markedForInstall[n].c_str();
 			RepositoryRecord* r = repo->GetRecord(id);
 			if (r) {
 				if (downloadFile(r->GetUrl(), "cache/download.tmp")) {
-					iprintf("Download successful\n");
+					printf("Download successful\n");
 					if (unzip("cache/download.tmp", path)) {
-						iprintf("Installation successful\n");
+						printf("Installation successful\n");
 
 						//Unmark after successful installation
 						markedForInstall.erase(markedForInstall.begin()+n);
 						n--;
 					} else {
-						iprintf("Installation failed\n");
+						printf("Installation failed\n");
 					}
 				} else {
-					iprintf("Error downloading: %s\n", repo->GetRecord(id)->GetUrl());
+					printf("Error downloading: %s\n", repo->GetRecord(id)->GetUrl());
 				}
 			}
-			iprintf("================================");
+			printf("================================");
 		}
     }
 
     stopWifi();
 #endif
 
-	iprintf("Press any key to continue...");
+	printf("Press any key to continue...");
 	waitForAnyKey();
 	consoleClear();
 }
@@ -131,7 +132,7 @@ void DownloadScrollPane::Update(u32& down, u32& held, touchPosition touch) {
 			struct tm* timeinfo = localtime((time_t*)&date);
 			strftime(dateStr, 16, "%Y-%m-%d", timeinfo);
 
-			iprintf("================================"
+			printf("================================"
 					"%s v%s\nauthor: %s\nlast edit: %s\n"
 					"================================"
 					"\n%s\n\n%s\n",
@@ -266,7 +267,7 @@ void DownloadScreen::UpdateRepositories() {
 
     //Connect
 	startWifi(&wifiConfig);
-	iprintf("Trying to connect via Wifi.\n(Press B to abort)\n");
+	printf("Trying to connect via Wifi.\n(Press B to abort)\n");
 	u32 assocStatus;
 	do {
 		swiWaitForVBlank();
@@ -275,21 +276,21 @@ void DownloadScreen::UpdateRepositories() {
 	} while (assocStatus != ASSOCSTATUS_ASSOCIATED && !(keysDown() & KEY_B));
 
 	if (keysDown() & KEY_B) {
-		iprintf("Aborted.\n");
+		printf("Aborted.\n");
 	} else {
 		//Download repo's
-		iprintf("Connection Established.\n");
-		iprintf("================================");
+		printf("Connection Established.\n");
+		printf("================================");
 
 		CsvFile csvFile;
 		if (!csvFile.Load("repo.txt")) {
-			iprintf("Error opening repo.txt\n");
+			printf("Error opening repo.txt\n");
 			error = true;
 		} else {
 			for (int n = 0; n < csvFile.GetNumberOfRecords(); n++) {
 				CsvRecord* cr = csvFile.GetRecord(n);
 				if (!cr || cr->GetNumberOfFields() < 2) {
-					iprintf("Error parsing repo.txt\n");
+					printf("Error parsing repo.txt\n");
 					error = true;
 					continue;
 				}
@@ -306,7 +307,7 @@ void DownloadScreen::UpdateRepositories() {
 
 				sprintf(baseUrl, "%s/repo-" SCRIPT_VERSION "/repo.ini", repoUrl);
 				if (!downloadFile(baseUrl, downloadedRepo)) {
-					iprintf("Can't find repo at: %s\n", baseUrl);
+					printf("Can't find repo at: %s\n", baseUrl);
 					error = true;
 					continue;
 				}
@@ -315,7 +316,7 @@ void DownloadScreen::UpdateRepositories() {
 
 				IniFile iniFile;
 				if (!iniFile.Load(downloadedRepo)) {
-					iprintf("Error: Downloaded repo.ini invalid format\n");
+					printf("Error: Downloaded repo.ini invalid format\n");
 					error = true;
 					continue;
 				}
@@ -324,10 +325,10 @@ void DownloadScreen::UpdateRepositories() {
 
 				r = iniFile.GetRecord("version");
 				if (r) {
-					iprintf("%s=%s\n", r->name, r->value);
+					printf("%s=%s\n", r->name, r->value);
 
 					if (strcmp(r->value, SCRIPT_VERSION) != 0) {
-						iprintf("Error: Invalid repo version\n");
+						printf("Error: Invalid repo version\n");
 						error = true;
 						continue;
 					}
@@ -335,7 +336,7 @@ void DownloadScreen::UpdateRepositories() {
 
 				r = iniFile.GetRecord("games");
 				if (r) {
-					iprintf("%s=%s\n", r->name, r->value);
+					printf("%s=%s\n", r->name, r->value);
 					toAbsoluteUrl(gamesUrl, baseUrl, r->value);
 					downloadFile(gamesUrl, downloadedGames);
 					gameRepo.AddAll(baseUrl, downloadedGames);
@@ -343,7 +344,7 @@ void DownloadScreen::UpdateRepositories() {
 
 				r = iniFile.GetRecord("chara");
 				if (r) {
-					iprintf("%s=%s\n", r->name, r->value);
+					printf("%s=%s\n", r->name, r->value);
 					toAbsoluteUrl(charaUrl, baseUrl, r->value);
 					downloadFile(charaUrl, downloadedChara);
 					charaRepo.AddAll(baseUrl, downloadedChara);
@@ -354,10 +355,10 @@ void DownloadScreen::UpdateRepositories() {
 
 	stopWifi();
 	if (error) {
-		iprintf("Some errors have occurred\n");
+		printf("Some errors have occurred\n");
 	}
-	iprintf("================================");
-	iprintf("Press any key to continue...");
+	printf("================================");
+	printf("Press any key to continue...");
 	waitForAnyKey();
 	consoleClear();
 

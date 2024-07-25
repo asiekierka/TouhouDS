@@ -4,7 +4,7 @@ image tex_boss 0 0 40 40
 hitbox 25
 pos 128 -16
 :life:
-bgm "flan.mp3"
+bgm "flan.wv"
 boss_name "Flandrisa"
 boss_num_spellcards 3
 move_to 128 64 .5

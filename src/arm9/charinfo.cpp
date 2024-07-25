@@ -22,7 +22,7 @@ CharInfo* initCharacterInfo() {
     charInfo = new CharInfo[charInfoL];
 
     int t = 0;
-    char path[MAXPATHLEN];
+    char path[PATH_MAX];
     char* filename;
     while ((filename = fileList.NextFile()) != NULL) {
         sprintf(path, "chara/%s", filename);

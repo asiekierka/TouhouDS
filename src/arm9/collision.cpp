@@ -125,7 +125,7 @@ void SegmentColNode::SetRotation(s32 da) {
 	dx = mulf32(baseDX, cosA) - mulf32(baseDY, sinA);
 	dy = mulf32(baseDX, sinA) + mulf32(baseDY, cosA);
 
-	//iprintf("%03d: %03d %03d\n", da>>6, dx>>12, dy>>12);
+	//printf("%03d: %03d %03d\n", da>>6, dx>>12, dy>>12);
 }
 
 //-----------------------------------------------------------------------------
@@ -213,7 +213,7 @@ void collide(ColNode* n1, ColNode* n2) {
 	} else if (n1->type == COL_segment && n2->type == COL_segment) {
 		hit = col_segment_segment((SegmentColNode*)n2, (SegmentColNode*)n1);
 	} else {
-		iprintf("unimplemented collision mode: %dx%d\n", n1->type, n2->type);
+		printf("unimplemented collision mode: %dx%d\n", n1->type, n2->type);
 	}
 
 	if (hit) {
@@ -284,7 +284,7 @@ void collide(SpriteList** sprites, ColGrid* colGrid, bool autoCollect,
 
 					if (!possibleLSCollisions) {
 						if (t1 == SPRITE_player) {
-							iprintf("%d\n", t1);
+							printf("%d\n", t1);
 						}
 						continue;
 					}
@@ -344,7 +344,7 @@ void collide(SpriteList** sprites, ColGrid* colGrid, bool autoCollect,
 			;
 		}
 	}
-    //iprintf("%d\n", colTests);
+    //printf("%d\n", colTests);
 }
 
 ITCM_CODE

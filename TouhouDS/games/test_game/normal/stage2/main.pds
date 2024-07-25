@@ -1,6 +1,6 @@
 
 define spell main
-bgm "bgm.mp3"
+bgm "bgm.wv"
 wait 60
 create large_fairy 128 64
 wait 720

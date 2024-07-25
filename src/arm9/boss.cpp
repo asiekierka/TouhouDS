@@ -236,7 +236,7 @@ void Boss::Update() {
     	SetAnimation(CAT_idle);
     }
 
-    //iprintf("\x1b[0;0H%d %p", animationType, animationSpellBook);
+    //printf("\x1b[0;0H%d %p", animationType, animationSpellBook);
 
     //Update timer
     if (!spellcard && !luaSpellcard) {

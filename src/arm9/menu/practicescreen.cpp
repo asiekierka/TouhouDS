@@ -107,7 +107,7 @@ void PracticeScreen::OnSelectedRouteChanged(GameInfo* gi, int route) {
 	stagePane->RemoveAllItems();
 	if (gi && route >= 0 && route < gi->GetNumRoutes()) {
 	    IniFile iniFile;
-	    char temp[MAXPATHLEN];
+	    char temp[PATH_MAX];
 
 	    for (int n = 0; n <= 64; n++) {
 	    	bool error = false;
