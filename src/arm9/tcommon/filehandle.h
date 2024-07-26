@@ -3,6 +3,7 @@
 
 #include <nds.h>
 #include <string.h>
+#include <limits.h>
 #include "dsunzip.h"
 
 class FileHandle {

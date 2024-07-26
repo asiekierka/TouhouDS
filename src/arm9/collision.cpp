@@ -485,7 +485,7 @@ bool col_segment_segment(SegmentColNode* s1, SegmentColNode* s2) {
 	closestPointOnLineSegment(&ptX[2], &ptY[2], s1, ptX[2], ptY[2]);
 	closestPointOnLineSegment(&ptX[3], &ptY[3], s1, ptX[3], ptY[3]);
 
-	s32 minDistSq = inttof32(999999);
+	s32 minDistSq = inttof32(524287);
 	for (int n = 0; n < 4; n++) {
 		s32 d = mulf32(ptX[n], ptX[n]) + mulf32(ptY[n], ptY[n]);
 		if (d < minDistSq) {
