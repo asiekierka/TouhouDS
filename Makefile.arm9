@@ -21,7 +21,7 @@ AUDIODIRS	:=
 # Defines passed to all files
 # ---------------------------
 
-DEFINES		:= -DENABLE_WIFI -DVERSION_STRING="\"TouhouDS 0.9.1-pre\""
+DEFINES		:= -DENABLE_WIFI -DVERSION_STRING="\"TouhouDS 0.9.2-pre\""
 
 # Libraries
 # ---------

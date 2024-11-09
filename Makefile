@@ -12,7 +12,7 @@ NAME		:= TouhouDS
 
 GAME_TITLE	:= Touhou DS
 GAME_SUBTITLE	:= by Spuzkaizer
-GAME_AUTHOR	:= 0.9.1-pre
+GAME_AUTHOR	:= 0.9.2-pre
 GAME_ICON	:= logo.bmp
 
 # DLDI and internal SD slot of DSi
